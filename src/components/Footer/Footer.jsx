@@ -1,7 +1,9 @@
+import Container from '../Container/Container.jsx';
+
 export default function Footer() {
   return (
-    <div>
+    <Container>
       <h2>Footer</h2>
-    </div>
+    </Container>
   );
 }
