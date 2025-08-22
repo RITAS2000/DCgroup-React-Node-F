@@ -26,7 +26,10 @@ export default function App() {
           рецептів
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
-          <Route path="/user-profile" element={<ProfilePage />} />
+          <Route path="/user-profile">
+            <Route index element={<Navigate to="own" replace />} />
+            <Route path=":recipeType" element={<ProfilePage />} />
+          </Route>
           <Route path="/add-recipe" element={<AddRecipePage />} />
           {/* <Route
             path="/recipes/:recipeId"
