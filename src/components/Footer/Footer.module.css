@@ -1,0 +1,28 @@
+.container {
+    width: 100%;
+    max-width: 393px;
+    margin: 0 auto;
+    padding: 32px 55.5px 24px;
+    background-color: #3d2218;
+} 
+
+ @media (min-width: 768px) {
+    .container {
+        max-width: 768px;
+        padding-left:  243px;
+        padding-right: 243px;
+    }
+}
+
+@media (min-width: 1440px) {
+    .container {
+        max-width: 1440px;
+        padding-left: 120.5px;
+        padding-right: 108px;
+    }
+}
+.logo {
+    width: 32px;
+    height: 30px;
+    background-color: aqua;
+}
