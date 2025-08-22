@@ -22,7 +22,7 @@ export default function App() {
     <Layout>
       <Suspense fallback={null}>
         <Routes>
-          <Route path="/" element={<HomePage />} /> //рендерить хіро і список
+          <Route path="/" element={<HomePage />} /> //рендерить hero і список
           рецептів
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
