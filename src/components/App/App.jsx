@@ -1,19 +1,29 @@
-import { Suspense } from 'react';
+import { lazy, Suspense } from 'react';
 import { Route, Routes } from 'react-router-dom';
-import NotFoundPage from '../../pages/NotFoundPage/NotFoundPage.jsx';
-import LoginPage from '../../pages/LoginPage/LoginPage.jsx';
-import RegisterPage from '../../pages/RegisterPage/RegisterPage.jsx';
-import HomePage from '../../pages/HomePage/HomePage.jsx';
 import Layout from '../Layout/Layout.jsx';
-import AddRecipePage from '../../pages/AddRecipePage/AddRecipePage.jsx';
-import ProfilePage from '../../pages/ProfilePage/ProfilePage.jsx';
+
+const HomePage = lazy(() => import('../../pages/HomePage/HomePage.jsx'));
+const LoginPage = lazy(() => import('../../pages/LoginPage/LoginPage.jsx'));
+const RegisterPage = lazy(() =>
+  import('../../pages/RegisterPage/RegisterPage.jsx'),
+);
+const AddRecipePage = lazy(() =>
+  import('../../pages/AddRecipePage/AddRecipePage.jsx'),
+);
+const ProfilePage = lazy(() =>
+  import('../../pages/ProfilePage/ProfilePage.jsx'),
+);
+const NotFoundPage = lazy(() =>
+  import('../../pages/NotFoundPage/NotFoundPage.jsx'),
+);
 
 export default function App() {
   return (
     <Layout>
       <Suspense fallback={null}>
         <Routes>
-          <Route path="/" element={<HomePage />} />
+          <Route path="/" element={<HomePage />} /> //рендерить хіро і список
+          рецептів
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/user-profile" element={<ProfilePage />} />

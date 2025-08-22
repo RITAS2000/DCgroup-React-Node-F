@@ -6,7 +6,8 @@ export default function Header() {
       <a href="./index.html">Tasteorama</a>
       <div>
         <Navigation />
-        {isLoggedIn ? <UserMenu /> : <AuthNav />}
+        <AuthNav />
+        {/* {isLoggedIn ? <UserMenu /> : <AuthNav />} */}
       </div>
     </header>
   );
