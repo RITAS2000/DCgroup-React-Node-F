@@ -32,12 +32,13 @@ export default function RecipeCard({
         </div>
       </div>
       <div className={css.descr_cont}>
-        <p className={css.description}>{description}</p>
-        <p>~{calories ?? 'N/A'} cals</p>
+        <p className={css.description1}>{description}</p>
+        <p className={css.description2}>~{calories ?? 'N/A'} cals</p>
       </div>
-
-      <button>Learn more</button>
-      <button>S</button>
+      <div className={css.btn_cont}>
+        <button>Learn more</button>
+        <button>S</button>
+      </div>
     </div>
   );
 }
