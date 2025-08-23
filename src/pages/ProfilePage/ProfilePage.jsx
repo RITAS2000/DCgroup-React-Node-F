@@ -1,34 +1,7 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import { apiFetch, PAGE_SIZE, getImageUrl } from '../../api/recipes';
 import s from './ProfilePage.module.css';
-
-const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:3000';
-const PAGE_SIZE = 12;
-
-async function apiFetch(path, { page = 1, limit = PAGE_SIZE, token } = {}) {
-  const url = new URL(`${API_BASE}${path}`);
-  if (path.includes('/own')) {
-    url.searchParams.set('page', page);
-    url.searchParams.set('limit', limit);
-  }
-  const res = await fetch(url, {
-    headers: {
-      'Content-Type': 'application/json',
-      ...(token ? { Authorization: `Bearer ${token}` } : {}),
-    },
-  });
-  if (!res.ok) {
-    const text = await res.text().catch(() => '');
-    throw new Error(`${res.status} ${res.statusText} ${text}`);
-  }
-  return res.json();
-}
-
-function getImageUrl(src) {
-  if (!src) return '';
-  if (src.startsWith('http://') || src.startsWith('https://')) return src;
-  if (src.startsWith('/')) return `${API_BASE}${src}`;
-  return `${API_BASE}/${src}`;
-}
 
 function RecipeCard({ item }) {
   const {
@@ -47,6 +20,8 @@ function RecipeCard({ item }) {
 
   const heading = name || title || 'Recipe';
   const desc = decr || description;
+  const navigate = useNavigate();
+  const recipeId = item.id || item._id;
 
   return (
     <article className={s.card}>
@@ -66,7 +41,11 @@ function RecipeCard({ item }) {
       {desc && <p className={s.desc}>{desc}</p>}
       <div className={s.meta}>
         {time ? <span className={s.metaPill}>{time} min</span> : <span />}
-        <button className={s.moreBtn} type="button">
+        <button
+          className={s.moreBtn}
+          type="button"
+          onClick={() => recipeId && navigate(`/recipes/${recipeId}`)}
+        >
           Learn more
         </button>
       </div>
@@ -86,14 +65,17 @@ function SkeletonCard() {
 }
 
 export default function ProfilePage() {
-  const [tab, setTab] = useState('own');
+  const { recipeType = 'own' } = useParams();
+  const navigate = useNavigate();
+  const tab = recipeType === 'favorites' ? 'saved' : 'own';
+
   const [items, setItems] = useState([]);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(false);
   const [err, setErr] = useState('');
 
-  const token = useMemo(() => localStorage.getItem('accessToken') || '', []);
+  const token = localStorage.getItem('accessToken') || '';
   const hasMore = page < totalPages;
 
   useEffect(() => {
@@ -103,7 +85,7 @@ export default function ProfilePage() {
     setErr('');
     void loadPage(1, true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [tab]);
+  }, [tab, token]);
 
   async function loadPage(nextPage = page + 1, replace = false) {
     setLoading(true);
@@ -117,7 +99,7 @@ export default function ProfilePage() {
         token,
       });
 
-      const box = data && data.data ? data.data : data;
+      const box = data?.data ?? data;
       const payload = box?.data ?? box?.recipes ?? box?.items ?? [];
 
       let tp = 1;
@@ -153,18 +135,18 @@ export default function ProfilePage() {
         <nav className={s.tabs} role="tablist" aria-label="Recipe lists">
           <button
             role="tab"
-            aria-selected={tab === 'own'}
+            aria-selected={tab === 'own' ? 'true' : 'false'}
             className={`${s.tabBtn} ${tab === 'own' ? s.active : ''}`}
-            onClick={() => setTab('own')}
+            onClick={() => navigate('/user-profile/own')}
             type="button"
           >
             My Recipes
           </button>
           <button
             role="tab"
-            aria-selected={tab === 'saved'}
+            aria-selected={tab === 'saved' ? 'true' : 'false'}
             className={`${s.tabBtn} ${tab === 'saved' ? s.active : ''}`}
-            onClick={() => setTab('saved')}
+            onClick={() => navigate('/user-profile/favorites')}
             type="button"
           >
             Saved Recipes
@@ -179,7 +161,7 @@ export default function ProfilePage() {
           <RecipeCard key={String(it.id || it._id)} item={it} />
         ))}
         {loading &&
-          Array.from({ length: 6 }).map((_, i) => (
+          Array.from({ length: PAGE_SIZE }).map((_, i) => (
             <SkeletonCard key={`sk-${i}`} />
           ))}
       </div>

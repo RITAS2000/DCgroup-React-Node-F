@@ -1,40 +1,43 @@
-import { getImageUrl, deleteFavorite } from '../../api/recipes';
-import { useMemo } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { getImageUrl, deleteFavorite } from '../../api/recipes';
 import s from './RecipeCard.module.css';
 
-export default function RecipeCard({ item, mode }) {
+export default function RecipeCard({
+  item,
+  mode = 'own',
+  onRemoved,
+  onRemovedError,
+}) {
   const navigate = useNavigate();
-  const token = useMemo(() => localStorage.getItem('accessToken') || '', []);
-  const {
-    title,
-    name,
-    description,
-    decr,
-    thumb,
-    recipeImg,
-    photo,
-    cals,
-    time,
-    _id,
-    id,
-  } = item;
+  const [pending, setPending] = useState(false);
 
-  const rawImg = photo || recipeImg || thumb || '';
-  const img = getImageUrl(rawImg);
-  const heading = name || title || 'Recipe';
-  const desc = decr || description;
+  const { title, name, description, thumb, photo, cals, time, id, _id } =
+    item || {};
+
   const recipeId = id || _id;
+  const heading = title || name || 'Recipe';
+  const desc = description || '';
+  const rawImg = photo || thumb || '';
+  const img = getImageUrl(rawImg);
+  const token = localStorage.getItem('accessToken') ?? '';
 
   async function onDelete() {
+    if (!recipeId || pending) return;
     try {
+      setPending(true);
       await deleteFavorite(recipeId, token);
-      const ev = new CustomEvent('recipe:removed', {
-        detail: { id: recipeId },
-      });
-      window.dispatchEvent(ev);
-    } catch {
-      alert('Failed to remove from favorites');
+      if (typeof onRemoved === 'function') {
+        onRemoved(recipeId);
+      }
+    } catch (e) {
+      if (typeof onRemovedError === 'function') {
+        onRemovedError(recipeId, e);
+      } else {
+        alert('Failed to remove from favorites');
+      }
+    } finally {
+      setPending(false);
     }
   }
 
@@ -42,9 +45,17 @@ export default function RecipeCard({ item, mode }) {
     <article className={s.card}>
       <div className={s.thumbWrap}>
         {img ? (
-          <img className={s.thumb} src={img} alt={heading} loading="lazy" />
+          <img
+            className={s.thumb}
+            src={img}
+            alt=""
+            loading="lazy"
+            onError={(e) => {
+              e.currentTarget.src = getImageUrl('/images/placeholder.png');
+            }}
+          />
         ) : (
-          <div className={s.thumbFallback} />
+          <div className={s.thumbFallback} aria-label="No image available" />
         )}
         {typeof cals === 'number' && (
           <span className={s.badge}>{cals} cals</span>
@@ -54,25 +65,30 @@ export default function RecipeCard({ item, mode }) {
       <h3 className={s.title} title={heading}>
         {heading}
       </h3>
+
       {desc && <p className={s.desc}>{desc}</p>}
 
       <div className={s.meta}>
         {time ? <span className={s.metaPill}>{time} min</span> : <span />}
+
         {mode === 'favorites' ? (
           <button
             className={s.deleteBtn}
             type="button"
             onClick={onDelete}
+            disabled={pending || !recipeId}
             aria-label="Remove from favorites"
+            aria-busy={pending ? 'true' : 'false'}
           >
-            {/* тут твій svg */}
-            Remove
+            {/* svg іконка видалення */}
+            {pending ? 'Removing…' : 'Remove'}
           </button>
         ) : (
           <button
             className={s.moreBtn}
             type="button"
-            onClick={() => navigate(`/recipes/${recipeId}`)}
+            onClick={() => recipeId && navigate(`/recipes/${recipeId}`)}
+            disabled={!recipeId}
           >
             Learn more
           </button>
