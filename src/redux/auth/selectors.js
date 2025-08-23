@@ -1,2 +1,3 @@
-export const selectIsAuthenticated = (s) => Boolean(s.auth?.token);
-export const selectAuthLoading = (s) => Boolean(s.auth?.loading);
+export const selectIsLoggedIn = (state) => state.auth.isLoggedIn;
+
+export const selectUser = (state) => state.auth.user;
