@@ -1,92 +1,88 @@
+// src/api/recipes.js
 export const API_BASE = (
   import.meta.env.VITE_API_URL || 'http://localhost:3000'
 ).replace(/\/+$/, '');
 export const PAGE_SIZE = 12;
 
-/*const withLeadingSlash = (path) => (path.startsWith('/') ? path : `/${path}`);*/
+// дуже проста перевірка, що токен схожий на JWT
+export const isJwt = (t) =>
+  /^[A-Za-z0-9-_]+\.[A-Za-z0-9-_]+\.[A-Za-z0-9-_]+$/.test(t || '');
+const effectiveToken = (t) => (isJwt(t) ? t : '');
 
-async function parseResponse(res) {
-  if (res.status === 204) return null;
-  const ct = res.headers.get('content-type') || '';
-  if (ct.includes('application/json')) {
-    return await res.json();
-  }
-  const text = await res.text().catch(() => '');
-  try {
-    return JSON.parse(text);
-  } catch {
-    return text;
-  }
-}
+/**
+ * УВАГА: тепер функція має 3-й аргумент opts (для signal тощо)
+ */
+export async function apiFetch(path, params = {}, opts = {}) {
+  const { page = 1, limit = PAGE_SIZE, token } = params;
+  const { signal } = opts;
 
-function toError(res, payload) {
-  const msg =
-    (payload && (payload.message || payload.error || payload.detail)) ||
-    `${res.status} ${res.statusText}`;
-  const err = new Error(String(msg));
-  err.status = res.status;
-  err.payload = payload;
-  return err;
-}
+  const url = new URL(`${API_BASE}${path}`);
+  const requiresAuth = path.includes('/own') || path.includes('/saved-recipes');
 
-function effectiveToken(passedToken) {
-  if (passedToken) return passedToken;
-  if (import.meta.env.VITE_DEV_FORCE_AUTH === 'true') {
-    return import.meta.env.VITE_DEV_TOKEN || '';
-  }
-  return '';
-}
-
-export async function apiFetch(
-  path,
-  { page = 1, limit = PAGE_SIZE, token, signal } = {},
-) {
-  const url = new URL(`${API_BASE}${path.startsWith('/') ? path : `/${path}`}`);
   if (path.includes('/own') || path.includes('/saved-recipes')) {
     url.searchParams.set('page', String(page));
     url.searchParams.set('limit', String(limit));
   }
 
+  // беремо токен з аргументів або з localStorage, і приймаємо його лише якщо він схожий на JWT
+  const tok = effectiveToken(token || localStorage.getItem('accessToken'));
+
+  // 🧯 Гість або сміттєвий токен → НЕ робимо fetch, віддаємо порожні дані
+  if (requiresAuth && !tok) {
+    return { data: [], totalPages: 1, totalItems: 0 };
+  }
+
   const res = await fetch(url, {
+    method: 'GET',
     signal,
     headers: {
       'Content-Type': 'application/json',
-      ...(effectiveToken(token)
-        ? { Authorization: `Bearer ${effectiveToken(token)}` }
-        : {}),
+      ...(tok ? { Authorization: `Bearer ${tok}` } : {}),
     },
   });
 
+  // якщо бек відповів помилкою — для 400/401 повернемо «порожній» результат, щоб не ламати UI
+  if (!res.ok) {
+    const text = await res.text().catch(() => '');
+    if (res.status === 400 || res.status === 401) {
+      return {
+        data: [],
+        totalPages: 1,
+        totalItems: 0,
+        error: `${res.status} ${res.statusText} ${text}`,
+      };
+    }
+    throw new Error(`${res.status} ${res.statusText} ${text}`);
+  }
+
   const ct = res.headers.get('content-type') || '';
-  const data = ct.includes('application/json')
-    ? await res.json()
-    : await res.text().catch(() => '');
-  if (!res.ok)
-    throw new Error(data?.message || `${res.status} ${res.statusText}`);
-  return data;
+  return ct.includes('application/json') ? res.json() : res.text();
 }
 
 export async function deleteFavorite(recipeId, token, signal) {
-  if (!recipeId) throw new Error('Recipe id is required');
-  const url = new URL(`${API_BASE}/api/recipes/saved-recipes/${recipeId}`);
+  const tok = effectiveToken(token || localStorage.getItem('accessToken'));
+  if (!tok) return false; // гість — нічого не робимо
 
+  const url = new URL(`${API_BASE}/api/recipes/saved-recipes/${recipeId}`);
   const res = await fetch(url, {
     method: 'DELETE',
     signal,
     headers: {
       'Content-Type': 'application/json',
-      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      Authorization: `Bearer ${tok}`,
     },
   });
 
-  const data = await parseResponse(res);
-  if (!res.ok) throw toError(res, data);
+  if (!res.ok) {
+    const text = await res.text().catch(() => '');
+    throw new Error(`${res.status} ${res.statusText} ${text}`);
+  }
   return true;
 }
 
 export function getImageUrl(src) {
   if (!src) return '';
-  if (/^(https?:|data:|blob:)/i.test(src)) return src;
+  if (src.startsWith('http://') || src.startsWith('https://')) return src;
   if (src.startsWith('/')) return `${API_BASE}${src}`;
   return `${API_BASE}/${src}`;
 }

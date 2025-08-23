@@ -1,20 +1,9 @@
 import { Navigate, Outlet } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import {
-  selectIsAuthenticated,
-  selectAuthLoading,
-} from '../../redux/auth/selectors';
-
-const REQUIRE_AUTH = import.meta.env.VITE_REQUIRE_AUTH === 'true';
+import { selectIsLoggedIn } from '../../redux/auth/selectors';
 
 export default function PrivateRoute() {
-  const isAuthenticated = useSelector(selectIsAuthenticated);
-  const loading = useSelector(selectAuthLoading);
+  const isAuth = useSelector(selectIsLoggedIn);
 
-  if (!REQUIRE_AUTH) return <Outlet />;
-
-  if (loading) return null;
-  /*if (loading) return <div>Loading...</div>;*/
-
-  return isAuthenticated ? <Outlet /> : <Navigate to="/login" replace />;
+  return isAuth ? <Outlet /> : <Navigate to="/login" replace />;
 }
