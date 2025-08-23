@@ -1,4 +1,4 @@
-import SaveRecipeButton from '../saveRecipeButton/saveRecipeButton.jsx';
+import SaveRecipeButton from '../SaveRecipeButton/SaveRecipeButton.jsx';
 import css from './RecipeDetails.module.css'
 
 export default function RecipeDetails({ details }) {
