@@ -1,4 +1,6 @@
-import AuthNav from "../AuthNav/AuthNav.jsx";
+import AuthNav from '../AuthNav/AuthNav.jsx';
+import Navigation from '../Navigation/Navigation.jsx';
+import UserMenu from '../UserMenu/UserMenu.jsx';
 
 export default function Header() {
   //   const isLoggedIn = useSelector(selectIsLoggedIn);
@@ -7,7 +9,7 @@ export default function Header() {
     <header>
       <a href="./index.html">Tasteorama</a>
       <div>
-        {/* <Navigation /> */}
+        <Navigation />
         <AuthNav />
 
         {/* {isLoggedIn ? <UserMenu /> : <AuthNav />} */}
