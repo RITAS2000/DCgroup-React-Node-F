@@ -1,0 +1,67 @@
+
+.box {
+    background-color: #FBFCF8;
+    padding-top: 48px;
+}
+
+.image {
+    border-radius: 8px;
+    margin-bottom: 32px;
+  }
+
+.title {
+    color: #000000;
+    font-weight: 600;
+    font-size: 48px;
+    line-height: 1.1;
+    margin-bottom: 32px;
+}
+
+.caption {
+    font-size: 24px;
+    line-height: 1;
+    margin-bottom: 15px;
+}
+.subtitle {
+    font-weight: 600;
+    font-size: 32px;
+    line-height: 1;
+    margin-bottom: 8px;
+    margin-bottom: 24px;
+
+}
+
+
+.list {
+    list-style-type: disc;
+    padding-left: 18px;
+}
+
+.text {
+    font-size: 16px;
+    line-height: 1;
+    margin-bottom: 15px;
+}
+
+.desc {
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 1.5;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+
+
+}
+
+.paragraph {
+    margin-bottom: 40px;
+}
+
+.wrap {
+    background-color: #FAF3E0;
+    margin-bottom: 24px;
+    padding: 16px;
+    border-radius: 16px;
+}
+
+
