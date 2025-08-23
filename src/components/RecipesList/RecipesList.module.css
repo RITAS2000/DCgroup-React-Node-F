@@ -24,3 +24,17 @@
         max-width: 339px;
     }
 }
+
+@media screen and (min-device-pixel-ratio: 2) and (min-width: 1225px),
+(min-resolution: 192dpi) and (min-width: 1225px) {
+    .recipe_list {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 24px;
+    }
+
+    .recipe_item {
+
+        max-width: 288px;
+    }
+}
