@@ -1,11 +1,16 @@
 import css from './Container.module.css';
 
 export default function Container({ children, variant }) {
-  const backgroundClass = variant === 'light' ? css.bgLight : css.bgDark;
+  let backgroundClass = '';
+  if (variant === 'white') {
+    backgroundClass = css.bgWhite;
+  } else if (variant === 'brown') {
+    backgroundClass = css.bgBrown;
+  } else if (variant === 'transparent') {
+    backgroundClass = css.bgTransparent;
+  }
   return (
-    <div className={`${css.container} ${variant ? backgroundClass : ''}`}>
-      {children}
-    </div>
+    <div className={`${css.container} ${backgroundClass}`}>{children}</div>
   );
 }
 
