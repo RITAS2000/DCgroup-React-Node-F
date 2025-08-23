@@ -1,78 +1,102 @@
 // src/api/recipes.js
-export const API_BASE = (
+const API_BASE = (
   import.meta.env.VITE_API_URL || 'http://localhost:3000'
 ).replace(/\/+$/, '');
+export { API_BASE };
+
 export const PAGE_SIZE = 12;
 
-// дуже проста перевірка, що токен схожий на JWT
-export const isJwt = (t) =>
-  /^[A-Za-z0-9-_]+\.[A-Za-z0-9-_]+\.[A-Za-z0-9-_]+$/.test(t || '');
-const effectiveToken = (t) => (isJwt(t) ? t : '');
-
-/**
- * УВАГА: тепер функція має 3-й аргумент opts (для signal тощо)
- */
-export async function apiFetch(path, params = {}, opts = {}) {
-  const { page = 1, limit = PAGE_SIZE, token } = params;
-  const { signal } = opts;
-
-  const url = new URL(`${API_BASE}${path}`);
-  const requiresAuth = path.includes('/own') || path.includes('/saved-recipes');
-
-  if (path.includes('/own') || path.includes('/saved-recipes')) {
-    url.searchParams.set('page', String(page));
-    url.searchParams.set('limit', String(limit));
-  }
-
-  // беремо токен з аргументів або з localStorage, і приймаємо його лише якщо він схожий на JWT
-  const tok = effectiveToken(token || localStorage.getItem('accessToken'));
-
-  // 🧯 Гість або сміттєвий токен → НЕ робимо fetch, віддаємо порожні дані
-  if (requiresAuth && !tok) {
-    return { data: [], totalPages: 1, totalItems: 0 };
-  }
-
+// універсальний фетч з авторизацією
+async function doFetch(url, { token, signal } = {}) {
   const res = await fetch(url, {
-    method: 'GET',
     signal,
     headers: {
       'Content-Type': 'application/json',
-      ...(tok ? { Authorization: `Bearer ${tok}` } : {}),
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
     },
   });
 
-  // якщо бек відповів помилкою — для 400/401 повернемо «порожній» результат, щоб не ламати UI
-  if (!res.ok) {
-    const text = await res.text().catch(() => '');
-    if (res.status === 400 || res.status === 401) {
-      return {
-        data: [],
-        totalPages: 1,
-        totalItems: 0,
-        error: `${res.status} ${res.statusText} ${text}`,
-      };
-    }
-    throw new Error(`${res.status} ${res.statusText} ${text}`);
+  // спробуємо прочитати тіло (і JSON, і текст)
+  // спробуємо прочитати тіло (і JSON, і текст)
+  const bodyText = await res.text().catch(() => ''); // ← без пустого catch
+  let body = null;
+  try {
+    body = bodyText ? JSON.parse(bodyText) : null;
+  } catch {
+    body = bodyText || null;
   }
 
-  const ct = res.headers.get('content-type') || '';
-  return ct.includes('application/json') ? res.json() : res.text();
+  if (!res.ok) {
+    const msg =
+      (body && (body.message || body.error || body.statusText)) ||
+      res.statusText ||
+      'Request failed';
+    const err = new Error(`${res.status} ${msg}`);
+    err.status = res.status;
+    err.body = body;
+    throw err;
+  }
+
+  return body ?? {};
+}
+
+/**
+ * apiFetch('/api/recipes/own', { page, limit, token, signal })
+ * apiFetch('/api/recipes/saved-recipes', { page, limit, token, signal })
+ */
+export async function apiFetch(
+  path,
+  { page = 1, limit = PAGE_SIZE, token, signal } = {},
+) {
+  // збираємо спроби: спочатку perPage, потім limit
+  const attempts = [];
+  const isPaginated = /\/own$|\/saved-recipes$/.test(path);
+
+  if (isPaginated) {
+    // 1) page + perPage
+    const u1 = new URL(`${API_BASE}${path}`);
+    u1.searchParams.set('page', String(page));
+    u1.searchParams.set('perPage', String(limit));
+    attempts.push(u1);
+
+    // 2) page + limit (fallback на випадок старих валідаторів)
+    const u2 = new URL(`${API_BASE}${path}`);
+    u2.searchParams.set('page', String(page));
+    u2.searchParams.set('limit', String(limit));
+    attempts.push(u2);
+  } else {
+    // без пагінації
+    attempts.push(new URL(`${API_BASE}${path}`));
+  }
+
+  // Послідовно пробуємо всі варіанти, поки не отримаємо ok
+  let lastErr = null;
+  for (const url of attempts) {
+    try {
+      // console.debug('[API GET]', url.pathname + url.search);
+      return await doFetch(url, { token, signal });
+    } catch (e) {
+      lastErr = e;
+      // якщо 400 / 404 — пробуємо наступний варіант
+      if (e?.status === 400 || e?.status === 404) continue;
+      // інші помилки віддаємо одразу
+      throw e;
+    }
+  }
+  // якщо всі варіанти впали
+  throw lastErr || new Error('Request failed');
 }
 
 export async function deleteFavorite(recipeId, token, signal) {
-  const tok = effectiveToken(token || localStorage.getItem('accessToken'));
-  if (!tok) return false; // гість — нічого не робимо
-
   const url = new URL(`${API_BASE}/api/recipes/saved-recipes/${recipeId}`);
   const res = await fetch(url, {
     method: 'DELETE',
     signal,
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${tok}`,
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
     },
   });
-
   if (!res.ok) {
     const text = await res.text().catch(() => '');
     throw new Error(`${res.status} ${res.statusText} ${text}`);
@@ -82,7 +106,7 @@ export async function deleteFavorite(recipeId, token, signal) {
 
 export function getImageUrl(src) {
   if (!src) return '';
-  if (src.startsWith('http://') || src.startsWith('https://')) return src;
+  if (/^https?:\/\//i.test(src)) return src;
   if (src.startsWith('/')) return `${API_BASE}${src}`;
   return `${API_BASE}/${src}`;
 }

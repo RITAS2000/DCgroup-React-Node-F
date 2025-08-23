@@ -1,7 +1,17 @@
+// src/components/pages/ProfilePage/ProfilePage.jsx
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { apiFetch, PAGE_SIZE, getImageUrl } from '../../api/recipes';
+import { API_BASE, PAGE_SIZE, getImageUrl } from '../../api/recipes';
 import s from './ProfilePage.module.css';
+
+async function safeJson(res) {
+  const text = await res.text().catch(() => '');
+  try {
+    return text ? JSON.parse(text) : {};
+  } catch {
+    return { _raw: text };
+  }
+}
 
 function RecipeCard({ item }) {
   const {
@@ -14,14 +24,11 @@ function RecipeCard({ item }) {
     photo,
     cals,
     time,
-  } = item;
-  const rawImg = photo || recipeImg || thumb || '';
-  const img = getImageUrl(rawImg);
-
+  } = item || {};
+  const img = getImageUrl(photo || recipeImg || thumb || '');
   const heading = name || title || 'Recipe';
-  const desc = decr || description;
   const navigate = useNavigate();
-  const recipeId = item.id || item._id;
+  const recipeId = item?.id || item?._id;
 
   return (
     <article className={s.card}>
@@ -38,7 +45,7 @@ function RecipeCard({ item }) {
       <h3 className={s.title} title={heading}>
         {heading}
       </h3>
-      {desc && <p className={s.desc}>{desc}</p>}
+      {(decr || description) && <p className={s.desc}>{decr || description}</p>}
       <div className={s.meta}>
         {time ? <span className={s.metaPill}>{time} min</span> : <span />}
         <button
@@ -78,47 +85,84 @@ export default function ProfilePage() {
   const token = localStorage.getItem('accessToken') || '';
   const hasMore = page < totalPages;
 
+  // DEV автологін (вимикається якщо прапор не true)
+  useEffect(() => {
+    async function devAutoLogin() {
+      if (token) return;
+      if (import.meta.env.VITE_DEV_FORCE_AUTH !== 'true') return;
+      const email = import.meta.env.VITE_DEV_EMAIL;
+      const password = import.meta.env.VITE_DEV_PASSWORD;
+      if (!email || !password) return;
+
+      try {
+        const r = await fetch(`${API_BASE}/api/auth/login`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password }),
+        });
+        const j = await safeJson(r);
+        const t = j?.data?.accessToken || j?.accessToken || j?.token || '';
+        if (r.ok && t) {
+          localStorage.setItem('accessToken', t);
+          location.reload();
+        }
+      } catch {
+        console.log();
+      }
+    }
+    devAutoLogin();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   useEffect(() => {
     setItems([]);
     setPage(1);
     setTotalPages(1);
     setErr('');
+    if (!token) return;
     void loadPage(1, true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tab, token]);
 
+  // Єдиний клієнт GET: завжди використовує perPage (бек цього інстансу читає саме його)
+  async function baseRequest(path, { page = 1, perPage = PAGE_SIZE } = {}) {
+    const url = new URL(`${API_BASE}${path}`);
+    url.searchParams.set('page', String(page));
+    url.searchParams.set('perPage', String(perPage)); // <- ключова правка
+    const headers = {};
+    if (token) headers.Authorization = `Bearer ${token}`;
+
+    const res = await fetch(url.toString(), { headers });
+    const data = await safeJson(res);
+
+    if (!res.ok) {
+      // спеціально для 401 — чистимо токен, щоб показати "Please log in..."
+      if (res.status === 401) localStorage.removeItem('accessToken');
+      throw new Error(data?.message || res.statusText || 'Request failed');
+    }
+    return data;
+  }
+
   async function loadPage(nextPage = page + 1, replace = false) {
+    if (!token) return;
     setLoading(true);
     setErr('');
     try {
       const path =
         tab === 'own' ? '/api/recipes/own' : '/api/recipes/saved-recipes';
-      const data = await apiFetch(path, {
+      const payload = await baseRequest(path, {
         page: nextPage,
-        limit: PAGE_SIZE,
-        token,
+        perPage: PAGE_SIZE,
       });
 
-      const box = data?.data ?? data;
-      const payload = box?.data ?? box?.recipes ?? box?.items ?? [];
+      const box = payload?.data ?? payload;
+      const list = box?.data ?? box?.recipes ?? box?.items ?? [];
+      const tp =
+        box?.totalPages ??
+        payload?.totalPages ??
+        Math.max(1, Math.ceil((box?.totalItems ?? list.length) / PAGE_SIZE));
 
-      let tp = 1;
-      if (typeof box?.totalPages === 'number') {
-        tp = box.totalPages;
-      } else if (typeof box?.data?.totalPages === 'number') {
-        tp = box.data.totalPages;
-      } else {
-        const totalItems =
-          (typeof box?.totalItems === 'number' ? box.totalItems : undefined) ??
-          (typeof box?.data?.totalItems === 'number'
-            ? box.data.totalItems
-            : undefined) ??
-          payload.length ??
-          0;
-        tp = Math.max(1, Math.ceil(totalItems / PAGE_SIZE));
-      }
-
-      setItems((prev) => (replace ? payload : [...prev, ...payload]));
+      setItems((prev) => (replace ? list : [...prev, ...list]));
       setPage(nextPage);
       setTotalPages(tp);
     } catch (e) {
@@ -154,6 +198,12 @@ export default function ProfilePage() {
         </nav>
       </header>
 
+      {!token && (
+        <div className={s.empty}>
+          <p>Please log in to see your recipes.</p>
+        </div>
+      )}
+
       {err && <div className={s.error}>⚠ {err}</div>}
 
       <div className={s.grid}>
@@ -166,13 +216,13 @@ export default function ProfilePage() {
           ))}
       </div>
 
-      {!loading && items.length === 0 && !err && (
+      {token && !loading && items.length === 0 && !err && (
         <div className={s.empty}>
           <p>No recipes yet.</p>
         </div>
       )}
 
-      {hasMore && (
+      {token && hasMore && !err && (
         <div className={s.actions}>
           <button
             className={s.loadMore}
