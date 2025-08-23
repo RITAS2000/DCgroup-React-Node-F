@@ -5,11 +5,9 @@
 
 import { useEffect, useState } from "react";
 import RecipeDetails from "../../components/RecipeDetails/RecipeDetails.jsx";
-import NotFoundPage from "../NotFoundPage/NotFoundPage.jsx";
 import { useParams } from "react-router-dom";
 import { getRecipeDetails } from "../../services/viewRecipeService.js";
-
-
+import NotFoundPage from "../NotFoundPage/NotFoundPage.jsx";
 export default function RecipeViewPage () {
 
     const { recipeId } = useParams();
