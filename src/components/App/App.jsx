@@ -1,7 +1,8 @@
 import { lazy, Suspense } from 'react';
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes, Navigate } from 'react-router-dom';
 import Layout from '../Layout/Layout.jsx';
 import { ToastContainer } from 'react-toastify';
+import PrivateRoute from '../PrivateRoute/PrivateRoute.jsx';
 
 const HomePage = lazy(() => import('../../pages/HomePage/HomePage.jsx'));
 const LoginPage = lazy(() => import('../../pages/LoginPage/LoginPage.jsx'));
@@ -27,12 +28,16 @@ export default function App() {
     <Layout>
       <Suspense fallback={null}>
         <Routes>
-          {/* рендерить хіро і список рецептів */}
           <Route path="/" element={<HomePage />} />
-
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
-          <Route path="/user-profile" element={<ProfilePage />} />
+          <Route path="/user-profile">
+            <Route
+              index
+              element={<Navigate to="/user-profile/own" replace />}
+            />
+            <Route path=":recipeType" element={<ProfilePage />} />
+          </Route>
           <Route path="/add-recipe" element={<AddRecipePage />} />
           <Route
             path="/recipes/:recipeId"
