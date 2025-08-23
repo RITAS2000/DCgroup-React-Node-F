@@ -107,13 +107,17 @@
 
     background-color: transparent;
     color: black;
+
+    
 }
 
-.btn_learn:hover,
-.btn_learn:focus {
+.btn_learn:hover
+{
     background-color: lightgrey;
 }
-
+.btn_learn:focus {
+outline: none;
+}
 .btn_learn:active {
     border: 1px solid lightgray;
     box-shadow: 0 0 0 6px rgba(78, 70, 180, 0.12), 0 0 0 2px white;
@@ -133,11 +137,13 @@
     background-color: transparent;
     color: black;
 }
-.btn_save:hover,
-.btn_save:focus {
+.btn_save:hover
+{
     background-color: lightgrey;
 }
-
+.btn_save:focus {
+outline: none;
+}
 .btn_save:active {
     border: 1px solid lightgray;
     box-shadow: 0 0 0 6px rgba(78, 70, 180, 0.12), 0 0 0 2px white;
