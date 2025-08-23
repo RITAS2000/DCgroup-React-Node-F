@@ -1,3 +1,4 @@
+/* ---------- Profile Page layout ---------- */
 .wrap {
   padding: 16px 16px 80px;
   max-width: 1200px;
@@ -17,129 +18,57 @@
   font-weight: 700;
 }
 
+/* ---------- Tabs (underline only on hover/focus/active) ---------- */
 .tabs {
-  display: inline-flex;
-  gap: 8px;
-  background: #f3eee9;
-  padding: 4px;
-  border-radius: 999px;
-  width: max-content;
+  display: flex;
+  gap: 32px;
 }
 
 .tabBtn {
   border: 0;
   background: transparent;
-  padding: 8px 14px;
-  border-radius: 999px;
-  font-weight: 600;
+  padding: 8px 0;
+  font-weight: 700;
+  font-size: 18px;
   cursor: pointer;
-}
-.tabBtn:hover {
-  opacity: 0.85;
-}
-.active {
-  background: #fff;
-  box-shadow: 0 0 0 1px #e0dcd7 inset, 0 2px 6px rgba(0, 0, 0, 0.06);
+  position: relative;
+  color: #000;
+  outline: none;
 }
 
-/* Grid */
+.tabBtn::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -2px;
+  height: 2px;
+  background: #000;
+  transform: scaleX(0);
+  transform-origin: center;
+  transition: transform 0.2s ease;
+}
+
+.tabBtn:hover::after,
+.tabBtn:focus-visible::after,
+.tabBtn.active::after {
+  transform: scaleX(1);
+}
+
+/* ---------- Grid for cards (cards styled in RecipeCard.module.css) ---------- */
 .grid {
   display: grid;
   grid-template-columns: 1fr;
   gap: 12px;
 }
 
-/* Card */
-.card {
-  background: #fff;
-  border: 1px solid #eee7df;
-  border-radius: 14px;
-  padding: 10px;
-  display: grid;
-  gap: 8px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-}
-
-.thumbWrap {
-  position: relative;
-  aspect-ratio: 4 / 3;
-  overflow: hidden;
-  border-radius: 10px;
-  background: #f7f4f1;
-}
-.thumb {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-}
-.thumbFallback {
-  width: 100%;
-  height: 100%;
-  background: #eee;
-}
-
-.badge {
-  position: absolute;
-  left: 8px;
-  bottom: 8px;
-  font-size: 12px;
-  background: #f8f0e6;
-  border: 1px solid #eadccd;
-  padding: 2px 8px;
-  border-radius: 999px;
-}
-
-.title {
-  font-size: 16px;
-  font-weight: 700;
-  line-height: 1.25;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-.desc {
-  color: #6b6259;
-  font-size: 13px;
-  line-height: 1.35;
-  display: -webkit-box;
-  line-clamp: 2;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-
-.meta {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-}
-.metaPill {
-  font-size: 12px;
-  padding: 4px 8px;
-  border-radius: 999px;
-  background: #f0ede9;
-  border: 1px solid #e5dfd8;
-}
-.moreBtn {
-  border: 0;
-  background: #f4e7d9;
-  border: 1px solid #eadccc;
-  padding: 8px 12px;
-  border-radius: 10px;
-  font-weight: 600;
-  cursor: pointer;
-}
-.moreBtn:hover {
-  filter: brightness(0.98);
-}
-
+/* ---------- Load more ---------- */
 .actions {
   display: flex;
   justify-content: center;
   margin-top: 16px;
 }
+
 .loadMore {
   border: 0;
   background: #cf9e6b;
@@ -154,7 +83,7 @@
   cursor: default;
 }
 
-/* Empty/Error */
+/* ---------- Empty / Error ---------- */
 .empty,
 .error {
   margin: 20px 0;
@@ -162,27 +91,16 @@
   color: #6b6259;
 }
 
-/* Skeletons */
+/* ---------- Simple skeleton placeholder ---------- */
 .skeleton {
-  position: relative;
-  overflow: hidden;
-}
-.skeleton .thumbWrap,
-.skeleton .line,
-.skeleton .lineSm {
+  height: 260px; /* приблизна висота картки */
+  border-radius: 14px;
+  border: 1px solid #eee7df;
   background: linear-gradient(90deg, #eee 25%, #f4f4f4 37%, #eee 63%);
   background-size: 400% 100%;
   animation: sh 1.2s ease-in-out infinite;
 }
-.line {
-  height: 18px;
-  border-radius: 6px;
-}
-.lineSm {
-  height: 12px;
-  width: 70%;
-  border-radius: 6px;
-}
+
 @keyframes sh {
   0% {
     background-position: 100% 50%;
@@ -192,7 +110,7 @@
   }
 }
 
-/* breakpoints (mobile-first) */
+/* ---------- Breakpoints ---------- */
 @media (min-width: 480px) {
   .grid {
     grid-template-columns: repeat(2, 1fr);

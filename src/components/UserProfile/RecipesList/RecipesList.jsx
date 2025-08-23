@@ -153,7 +153,10 @@ export default function RecipesList({ type }) {
 
         {loading &&
           Array.from({ length: PAGE_SIZE }).map((_, i) => (
-            <div key={`sk-${i}`} className={`${s.card} ${s.skeleton}`} />
+            <div
+              key={`sk-${i}`}
+              className={`${s.sceletonCard} ${s.skeleton}`}
+            />
           ))}
       </div>
 

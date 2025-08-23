@@ -7,9 +7,9 @@ import { ReactComponent as ClockIcon } from '../../../images/svg/clock.svg';
 
 export default function RecipeCard({
   item,
-  mode = 'own', // 'own' | 'favorites'
-  onRemoved, // колбек після видалення зі збережених
-  onRemovedError, // колбек помилки
+  mode = 'own',
+  onRemoved,
+  onRemovedError,
 }) {
   const navigate = useNavigate();
   const [pending, setPending] = useState(false);
@@ -34,7 +34,6 @@ export default function RecipeCard({
   const img = getImageUrl(rawImg);
   const token = localStorage.getItem('accessToken') ?? '';
 
-  // у «favorites» картка вже збережена
   const [isSaved, setIsSaved] = useState(mode === 'favorites');
 
   async function toggleSave(id) {
@@ -64,9 +63,11 @@ export default function RecipeCard({
     }
   }
 
+  // Маячок: у консолі має бути об’єкт із ключами card, thumbWrap, ...
+  console.log('RecipeCard OK', s);
+
   return (
-    <article className={s.card}>
-      {/* зображення */}
+    <article className={s.card} data-rc="v2">
       <div className={s.thumbWrap}>
         {img ? (
           <img
@@ -83,12 +84,10 @@ export default function RecipeCard({
         )}
       </div>
 
-      {/* заголовок + бейдж часу (з іконкою) */}
       <div className={s.headerRow}>
         <h3 className={s.title} title={heading}>
           {heading}
         </h3>
-
         {time && (
           <span className={s.timeBadge} title={`${time} min`}>
             <ClockIcon className={s.clockIcon} />
@@ -103,7 +102,6 @@ export default function RecipeCard({
         <p className={s.desc}>&nbsp;</p>
       )}
 
-      {/* низ картки: калорії + кнопки */}
       <div className={s.footerRow}>
         {typeof (cals ?? calories) === 'number' ? (
           <span className={s.calsPill}>~{cals ?? calories} cals</span>
