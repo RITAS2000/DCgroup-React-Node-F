@@ -1,9 +1,10 @@
+import { Link } from 'react-router-dom';
 import css from './Logo.module.css';
-export function Logo() {
+export default function Logo() {
   return (
-    <div className={css.continer}>
+    <Link className={css.continer} to="/">
       <div className={css.logo}></div>
       <p className={css.text}>Tasteorama</p>
-    </div>
+    </Link>
   );
 }
