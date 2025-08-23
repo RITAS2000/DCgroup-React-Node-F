@@ -29,7 +29,7 @@ export default function FooterLink() {
         className={({ isActive }) =>
           isActive ? `${css.link} ${css.isActive}` : css.link
         }
-        to={isLoggedIn ? '/user-profile' : '/'}
+        to="/user-profile"
         onClick={handleAccountClick}
       >
         Account
