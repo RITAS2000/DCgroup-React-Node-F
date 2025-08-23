@@ -1,8 +1,6 @@
 import SaveRecipeButton from '../saveRecipeButton/saveRecipeButton.jsx';
 import css from './RecipeDetails.module.css'
 
-
-
 export default function RecipeDetails({ details }) {
 
 // const recipeId = details.id;
