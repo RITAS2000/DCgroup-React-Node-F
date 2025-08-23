@@ -8,6 +8,7 @@ import RecipeDetails from "../../components/RecipeDetails/RecipeDetails.jsx";
 import { useParams } from "react-router-dom";
 import { getRecipeDetails } from "../../services/viewRecipeService.js";
 import NotFoundPage from "../NotFoundPage/NotFoundPage.jsx";
+import Container from "../../components/Container/Container.jsx";
 export default function RecipeViewPage () {
 
     const { recipeId } = useParams();
@@ -24,7 +25,9 @@ export default function RecipeViewPage () {
         <>
           {
             recipeDetails ? (
-              <RecipeDetails details={recipeDetails}/>
+              <Container variant="light">
+                <RecipeDetails details={recipeDetails}/>
+              </Container>
             ) : (
               <NotFoundPage />
             )
