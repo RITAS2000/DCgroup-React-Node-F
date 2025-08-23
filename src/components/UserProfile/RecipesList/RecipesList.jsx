@@ -57,55 +57,55 @@ export default function RecipesList({ type }) {
     setErr('');
     const myReqId = ++reqIdRef.current;
 
+    // скасовуємо попередній запит
     abortRef.current?.abort();
     const ctrl = new AbortController();
     abortRef.current = ctrl;
 
     try {
-      let res;
-      if (type === 'own') {
-        // own -> page + limit
-        res = await getOwnRecipes({
-          page: nextPage,
-          limit: PAGE_SIZE,
-          token,
-          signal: ctrl.signal,
-        });
-      } else {
-        // favorites(saved) -> page + perPage
-        res = await getSavedRecipes({
-          page: nextPage,
-          perPage: PAGE_SIZE,
-          token,
-          signal: ctrl.signal,
-        });
-      }
+      const res =
+        type === 'own'
+          ? await getOwnRecipes({
+              page: nextPage,
+              limit: PAGE_SIZE,
+              token,
+              signal: ctrl.signal,
+            })
+          : await getSavedRecipes({
+              page: nextPage,
+              perPage: PAGE_SIZE,
+              token,
+              signal: ctrl.signal,
+            });
 
+      // якщо за час запиту змінився тип/сторінка — ігноруємо відповідь
       if (reqIdRef.current !== myReqId) return;
 
-      const tp =
-        (typeof res?.totalPages === 'number' && res.totalPages) ||
-        // якщо бек не повернув totalPages – вирахуємо грубо
-        Math.max(
-          1,
-          Math.ceil(
-            (replace ? res.items.length : items.length + res.items.length) /
-              PAGE_SIZE,
-          ),
-        );
-
+      // дедуп по id/_id
       setItems((prev) => {
         const merged = replace ? res.items : [...prev, ...res.items];
         const seen = new Set();
         return merged.filter((it) => {
-          const k = String(it.id ?? it._id ?? '');
-          if (seen.has(k)) return false;
-          seen.add(k);
+          const key = String(it?.id ?? it?._id ?? '');
+          if (!key || seen.has(key)) return false;
+          seen.add(key);
           return true;
         });
       });
+
       setPage(nextPage);
-      setTotalPages(tp);
+      setTotalPages(
+        typeof res.totalPages === 'number' && res.totalPages > 0
+          ? res.totalPages
+          : Math.max(
+              1,
+              Math.ceil(
+                (replace
+                  ? res.items?.length || 0
+                  : items.length + (res.items?.length || 0)) / PAGE_SIZE,
+              ),
+            ),
+      );
     } catch (e) {
       if (e?.name !== 'AbortError') setErr(e?.message || 'Failed to load');
     } finally {
