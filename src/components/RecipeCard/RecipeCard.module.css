@@ -1,4 +1,8 @@
 .card {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+
     border-radius: 16px;
     padding: 12px;
     width: 361px;
@@ -49,7 +53,7 @@
     flex-direction: column;
     width: 100%;
     height: 83px;
-    margin-bottom: 16px;
+    
     gap: 8px;
 }
 
@@ -81,6 +85,43 @@
 }
 
 .btn_cont {
+    margin-top: auto;
     display: flex;
     justify-content: space-between;
+    gap: 8px;
+}
+
+.btn_learn {
+    
+    border: 1px solid var(black);
+    border-radius: 8px;
+    padding: 8px;
+    width: 289px;
+    height: 40px;
+
+    font-family: "Montserrat", sans-serif;
+    font-weight: 600;
+    font-size: 16px;
+
+    cursor: pointer;
+
+    background-color: transparent;
+    color: var(--black);
+}
+
+.btn_save {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: 1px solid var(black);
+    border-radius: 8px;
+    padding: 8px;
+    width: 40px;
+    height: 40px;
+
+    background-color: transparent;
+    color: var(--black);
+
+    
 }
