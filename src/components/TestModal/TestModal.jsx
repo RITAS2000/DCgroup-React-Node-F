@@ -2,12 +2,30 @@ import { useSelector, useDispatch } from 'react-redux';
 import { closeModal } from '../../redux/modal/slice.js';
 import { selectIsModalOpen } from '../../redux/modal/selectors.js';
 import css from './TestModal.module.css';
+import { useEffect } from 'react';
 
 export default function TestModal() {
   const isOpen = useSelector(selectIsModalOpen);
   const dispatch = useDispatch();
 
-  if (!isOpen) return null; // якщо модалка закрита — нічого не рендеримо
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        dispatch(closeModal());
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [isOpen, dispatch]);
+
+  if (!isOpen) return null;
+
   return (
     <div className={css.backdrop} onClick={() => dispatch(closeModal())}>
       <div className={css.modal} onClick={(e) => e.stopPropagation()}>
