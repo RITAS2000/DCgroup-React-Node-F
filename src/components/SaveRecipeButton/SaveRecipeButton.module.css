@@ -1,0 +1,48 @@
+.saveButton {
+    background-color: #9B6C43;
+    color: #FFFFFF;
+    border: none;
+    border-radius: 8px;
+    padding: 16px;
+    cursor: pointer;
+    width: 100%;
+    margin-bottom: 24px;
+
+    font-weight: 600;
+    font-size: 18px;
+    line-height: 1;
+
+}
+
+.saveButton:hover,
+.saveButton:focus {
+    background-color: #6D554B;
+    transition: background-color 0.8s ease;
+}
+
+.saveButton:active {
+    background-color: #9B6C43;
+}.saveButton {
+    background-color: #9B6C43;
+    color: #FFFFFF;
+    border: none;
+    border-radius: 8px;
+    padding: 16px;
+    cursor: pointer;
+    width: 100%;
+    margin-bottom: 24px;
+
+    font-weight: 600;
+    font-size: 18px;
+    line-height: 1;
+    transition: background-color 0.3s ease;
+}
+
+.saveButton:hover,
+.saveButton:focus {
+    background-color: #6D554B;
+}
+
+.saveButton:active {
+    background-color: #9B6C43;
+}
