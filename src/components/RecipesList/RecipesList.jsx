@@ -32,7 +32,7 @@ export default function RecipesList() {
         {recipes.slice(0, card).map(({ _id, thumb, title, time, description, calories }, index) => {
           const isLastNew = index === card - 12; // перший новий елемент після "Load More"
           return (
-            <li key={_id} ref={isLastNew ? lastCardRef : null}>
+            <li className={css.recipe_item} key={_id} ref={isLastNew ? lastCardRef : null}>
               <RecipeCard
                 thumb={thumb}
                 title={title}

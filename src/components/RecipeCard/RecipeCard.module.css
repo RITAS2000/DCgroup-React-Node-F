@@ -5,10 +5,14 @@
 
     border-radius: 16px;
     padding: 12px;
-    width: 361px;
+    width: 100%;
+    max-width: 361px;
     height: 483px;
     background-color: #faf3e0;
 }
+
+
+
 
 .image {
     border-radius: 8px;
@@ -111,13 +115,14 @@
     transition: background-color 0.8s;
 }
 
-.btn_learn:hover
-{
+.btn_learn:hover {
     background-color: lightgrey;
 }
+
 .btn_learn:focus {
-outline: none;
+    outline: none;
 }
+
 .btn_learn:active {
     border: 1px solid lightgray;
     box-shadow: 0 0 0 6px rgba(78, 70, 180, 0.12), 0 0 0 2px white;
@@ -139,13 +144,15 @@ outline: none;
 
     transition: background-color 0.8s;
 }
-.btn_save:hover
-{
+
+.btn_save:hover {
     background-color: lightgrey;
 }
+
 .btn_save:focus {
-outline: none;
+    outline: none;
 }
+
 .btn_save:active {
     border: 1px solid lightgray;
     box-shadow: 0 0 0 6px rgba(78, 70, 180, 0.12), 0 0 0 2px white;

@@ -5,8 +5,22 @@
 }
 
 .recipe_list {
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: 1fr;
     gap: 24px;
     margin-bottom: 24px;
+}
+
+@media screen and (min-device-pixel-ratio: 2) and (min-width: 704px),
+(min-resolution: 192dpi) and (min-width: 704px) {
+    .recipe_list {
+        grid-template-columns: repeat(2, 1fr);
+        /* по 2 картки в ряд */
+    }
+
+    .recipe_item {
+        flex: 1 1 calc(50% - 24px);
+        /* для 2 в ряд */
+        max-width: 339px;
+    }
 }
