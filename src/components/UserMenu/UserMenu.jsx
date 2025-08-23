@@ -1,3 +1,5 @@
+import css from './UserMenu.module.css';
+
 export default function UserMenu() {
   //   const dispatch = useDispatch();
   //   const user = useSelector(selectUser);
@@ -9,11 +11,15 @@ export default function UserMenu() {
     name: 'Max',
   };
   return (
-    <div>
-      <div>{user.name.charAt(0)}</div>
-      <span>{user.name}</span>
-      <div>|</div>
-      <button>Logout</button>
+    <div className={css.userMenu}>
+      <div className={css.userName}>
+        <div className={css.letter}>{user.name.charAt(0)}</div>
+        <span>{user.name}</span>
+      </div>
+
+      <div className={css.separator}></div>
+
+      <button className={css.btnLogout}>Logout</button>
       {/* <button className={css.logoutBtn} type="button" onClick={handleLogOut}>
         Logout
       </button> */}
