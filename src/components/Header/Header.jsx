@@ -6,8 +6,13 @@ export default function Header() {
   //   const isLoggedIn = useSelector(selectIsLoggedIn);
 
   return (
-    <header>
-      <a href="./index.html">Tasteorama</a>
+    <header style={{backgroundColor: 'grey'}}>
+      <a href="./index.html">
+        <svg width="24" height="24">
+          <use href="/sprite/symbol-defs.svg#icon-logo" />
+        </svg>
+        Tasteorama
+      </a>
       <div>
         <Navigation />
         <AuthNav />
