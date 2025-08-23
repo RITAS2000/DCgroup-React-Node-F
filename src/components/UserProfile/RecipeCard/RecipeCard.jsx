@@ -1,15 +1,14 @@
-// src/components/UserProfile/RecipeCard/RecipeCard.jsx
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getImageUrl, deleteFavorite, addFavorite } from '../../api/recipes';
+import { getImageUrl, deleteFavorite, addFavorite } from '../../../api/recipes';
 import s from './RecipeCard.module.css';
-import { ReactComponent as FavorIcon } from '../../images/svg/favor.svg';
-import { ReactComponent as ClockIcon } from '../../images/svg/clock.svg';
+import { ReactComponent as FavorIcon } from '../../../images/svg/favor.svg';
+import { ReactComponent as ClockIcon } from '../../../images/svg/clock.svg';
 
 export default function RecipeCard({
   item,
   mode = 'own', // 'own' | 'favorites'
-  onRemoved, // колбек після видалення з обраного
+  onRemoved, // колбек після видалення зі збережених
   onRemovedError, // колбек помилки
 }) {
   const navigate = useNavigate();
@@ -35,7 +34,7 @@ export default function RecipeCard({
   const img = getImageUrl(rawImg);
   const token = localStorage.getItem('accessToken') ?? '';
 
-  // у списку "favorites" — вже збережений
+  // у «favorites» картка вже збережена
   const [isSaved, setIsSaved] = useState(mode === 'favorites');
 
   async function toggleSave(id) {
@@ -45,7 +44,6 @@ export default function RecipeCard({
       if (isSaved) {
         await deleteFavorite(id, token);
         setIsSaved(false);
-        // якщо ми на сторінці "favorites" — видаляємо картку із списку
         if (mode === 'favorites') {
           if (typeof onRemoved === 'function') onRemoved(id);
           else
@@ -68,13 +66,13 @@ export default function RecipeCard({
 
   return (
     <article className={s.card}>
-      {/* тільки картинка у шапці */}
+      {/* зображення */}
       <div className={s.thumbWrap}>
         {img ? (
           <img
             className={s.thumb}
             src={img}
-            alt=""
+            alt={heading}
             loading="lazy"
             onError={(e) => {
               e.currentTarget.src = getImageUrl('/images/placeholder.png');
@@ -85,16 +83,16 @@ export default function RecipeCard({
         )}
       </div>
 
-      {/* заголовок + бейдж часу праворуч */}
+      {/* заголовок + бейдж часу (з іконкою) */}
       <div className={s.headerRow}>
         <h3 className={s.title} title={heading}>
           {heading}
         </h3>
 
-        {!!time && (
+        {time && (
           <span className={s.timeBadge} title={`${time} min`}>
             <ClockIcon className={s.clockIcon} />
-            {time}
+            {time} min
           </span>
         )}
       </div>
@@ -105,7 +103,7 @@ export default function RecipeCard({
         <p className={s.desc}>&nbsp;</p>
       )}
 
-      {/* низ картки: калорії зліва, справа — Learn more + закладка */}
+      {/* низ картки: калорії + кнопки */}
       <div className={s.footerRow}>
         {typeof (cals ?? calories) === 'number' ? (
           <span className={s.calsPill}>~{cals ?? calories} cals</span>
@@ -128,6 +126,7 @@ export default function RecipeCard({
             className={`${s.favBtn} ${isSaved ? s.favBtnActive : ''}`}
             onClick={() => toggleSave(recipeId)}
             aria-label={isSaved ? 'Remove from favorites' : 'Save to favorites'}
+            disabled={pending || !recipeId}
           >
             <FavorIcon />
           </button>

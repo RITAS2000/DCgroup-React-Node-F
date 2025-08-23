@@ -15,6 +15,8 @@ export default function RecipesList({ type }) {
   const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(false);
   const [err, setErr] = useState('');
+  // тригер для форс-рендера після очищення токена
+  const [authVer, bumpAuthVer] = useState(0);
 
   const token = localStorage.getItem('accessToken') || '';
   const isPrivate = type === 'own' || type === 'favorites';
@@ -23,16 +25,19 @@ export default function RecipesList({ type }) {
   const reqIdRef = useRef(0);
   const abortRef = useRef(null);
 
+  // утиліта: визначаємо саме “прострочений токен”
+  const isTokenExpired = (msg = '') => /access token expired/i.test(msg);
+
   useEffect(() => {
     setItems([]);
     setPage(1);
     setTotalPages(1);
     setErr('');
 
-    if (isPrivate && !token) return; // без токена для приватних – нічого не вантажимо
+    if (isPrivate && !token) return; // без токена приватні не вантажимо
     void loadPage(1, true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [type, token]);
+  }, [type, token, authVer]);
 
   useEffect(() => {
     function onRemoved(e) {
@@ -107,7 +112,16 @@ export default function RecipesList({ type }) {
             ),
       );
     } catch (e) {
-      if (e?.name !== 'AbortError') setErr(e?.message || 'Failed to load');
+      // якщо токен прострочився — робимо “автовихід” і не показуємо помилку
+      const msg = e?.message || '';
+      if (isTokenExpired(msg) || e?.status === 401) {
+        localStorage.removeItem('accessToken');
+        setItems([]);
+        setErr(''); // не показуємо “Access token expired”
+        bumpAuthVer((v) => v + 1); // форс-рендер, щоб зчитати свіжий токен ('')
+      } else if (e?.name !== 'AbortError') {
+        setErr(msg || 'Failed to load');
+      }
     } finally {
       if (reqIdRef.current === myReqId) {
         setLoading(false);
@@ -118,7 +132,10 @@ export default function RecipesList({ type }) {
 
   return (
     <>
-      {err && <div className={s.error}>⚠ {err}</div>}
+      {/* Показуємо інші помилки, але не “Access token expired” */}
+      {err && !/access token expired/i.test(err) && (
+        <div className={s.error}>⚠ {err}</div>
+      )}
 
       <div className={s.grid}>
         {items.map((it) => (
