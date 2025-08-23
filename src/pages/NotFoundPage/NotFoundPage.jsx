@@ -6,13 +6,8 @@ import imgTabl1x from '../../images/NotFound-desk-tabl@1x.webp';
 import imgTabl2x from '../../images/NotFound-desk-tabl@2x.webp';
 import css from './NotFoundPage.module.css';
 import { GoArrowLeft } from 'react-icons/go';
-import { useSelector } from 'react-redux';
-import { selectIsLoggedIn } from '../../redux/auth/selectors.js';
 
 export default function NotFoundPage() {
-  const isLoggedIn = useSelector(selectIsLoggedIn);
-  const target = isLoggedIn ? '/user-profile' : '/';
-
   return (
     <Container variant="light">
       <div className={css.container}>
@@ -39,7 +34,7 @@ export default function NotFoundPage() {
           <p className={css.text}>Recipe not found</p>
         </div>
 
-        <Link className={css.link} to={target}>
+        <Link className={css.link} to="/">
           <GoArrowLeft className={css.icon} />
           <p className={css.linkText}>Back to Home</p>
         </Link>
