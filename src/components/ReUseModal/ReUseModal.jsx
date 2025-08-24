@@ -15,7 +15,7 @@ export default function ReUseModal({ children }) {
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, []);
+  }, [handleClose]);
 
   const handleBackdropClick = () => handleClose();
   const handleModalClick = (e) => e.stopPropagation();
