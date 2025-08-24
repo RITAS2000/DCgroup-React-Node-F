@@ -1,7 +1,6 @@
+import Main from '../../components/Outlet/Outlet.jsx';
+import RecipesList from '../../components/RecipesList/RecipesList.jsx';
+
 export default function HomePage() {
-  return (
-    <div>
-      <h1>Home Page</h1>
-    </div>
-  );
+  return <RecipesList />;
 }

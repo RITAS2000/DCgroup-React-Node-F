@@ -76,15 +76,25 @@ export default function SaveRecipeButton({ recipeId }) {
     };
 
     return (
-      <>
-        { isSaved &&
-            (<button onClick={handleUnsave} className={css.saveButton}>Unsave</button>)
-        }
-        { !isSaved &&
-            (<button onClick={handleSave} className={css.saveButton}>Save</button>)
-        }
-      </>
-
+        <>
+          {isSaved ? (
+            <button onClick={handleUnsave} className={css.saveButton}>
+              Unsave
+              <svg className={css.icon} width="24" height="24">
+                <use href="/sprite/symbol-defs.svg#icon-bookmark-outline"
+                     style={{ fill: 'white', stroke: 'none' }}/>
+              </svg>
+            </button>
+          ) : (
+            <button onClick={handleSave} className={css.saveButton}>
+              Save
+              <svg className={css.icon} width="24" height="24">
+                <use href="/sprite/symbol-defs.svg#icon-bookmark-outline"
+                     style={{ fill: 'transparent', stroke: 'white' }}/>
+              </svg>
+            </button>
+          )}
+        </>
     )
 };
 
