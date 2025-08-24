@@ -5,8 +5,7 @@ import LoadMoreBtn from '../LoadMoreBtn/LoadMoreBtn.jsx';
 import RecipeCard from '../RecipeCard/RecipeCard.jsx';
 import css from './RecipesList.module.css';
 
-axios.defaults.baseURL =
-  'https://dcgroup-react-node-b.onrender.com/api/recipes';
+axios.defaults.baseURL = 'https://dcgroup-react-node-b.onrender.com/';
 
 export default function RecipesList() {
   const [recipes, setRecipes] = useState([]);
@@ -22,7 +21,7 @@ export default function RecipesList() {
   useEffect(() => {
     const fetchRecipes = async () => {
       try {
-        const response = await axios.get('/search');
+        const response = await axios.get('api/recipes/search');
         const recipesArray = response.data?.data?.data || [];
         // console.log('довжина', recipesArray);
         setRecipes(recipesArray);
