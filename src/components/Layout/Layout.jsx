@@ -4,14 +4,14 @@ import css from './Layout.module.css';
 
 import ReModalContainer from '../ReUseModal/ReModalContainer/ReModalContainer.jsx';
 
-import Main from '../Main/Main.jsx';
+import Outlet from '../Outlet/Outlet.jsx';
 
 export default function Layout({ children }) {
   return (
     <div className={css.page}>
       <Header />
       <ReModalContainer />
-      <Main>{children}</Main>
+      <Outlet>{children}</Outlet>
       <Footer />
     </div>
   );
