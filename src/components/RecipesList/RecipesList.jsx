@@ -20,7 +20,9 @@ export default function RecipesList() {
     try {
       setLoading(true);
       const response = await axios.get(`api/recipes?page=${page}&perPage=12`);
+
       const data = response.data?.data || {};
+      console.log('API response:', response.data);
       const recipesArray = data.data || [];
 
       setRecipes((prev) => [...prev, ...recipesArray]); // додаємо нові до старих
