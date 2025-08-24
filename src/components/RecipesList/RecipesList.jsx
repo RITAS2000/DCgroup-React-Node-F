@@ -18,10 +18,8 @@ export default function RecipesList() {
   //отримуємо з бекенда всі картки рецептів
   const fetchRecipes = async (page) => {
     try {
-        setLoading(true);
-      const response = await axios.get(
-        `api/recipes/search?page=${page}&perPage=12`,
-      );
+      setLoading(true);
+      const response = await axios.get(`api/recipes?page=${page}&perPage=12`);
       const data = response.data?.data || {};
       const recipesArray = data.data || [];
 
@@ -29,9 +27,9 @@ export default function RecipesList() {
       setHasNextPage(data.hasNextPage);
     } catch (error) {
       console.error('Помилка при завантаженні рецептів:', error);
+    } finally {
+      setLoading(false);
     }
-    finally{
-        setLoading(false)};
   };
 
   useEffect(() => {
@@ -78,7 +76,9 @@ export default function RecipesList() {
         )}
       </ul>
 
-      {recipes.length > 0 && !loading && hasNextPage && (<LoadMoreBtn onClick={handleLoadMore} />)}
+      {recipes.length > 0 && !loading && hasNextPage && (
+        <LoadMoreBtn onClick={handleLoadMore} />
+      )}
       {/* <LoadMoreBtn onClick={handleLoadMore} /> */}
     </div>
   );
