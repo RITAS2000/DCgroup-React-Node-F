@@ -8,7 +8,7 @@ export default function UserMenu() {
 
     const handleLogOut = () => {
       dispatch(logout());
-     };
+    };
   return (
     <div className={css.userMenu}>
       <div className={css.userName}>
@@ -18,10 +18,13 @@ export default function UserMenu() {
 
       <div className={css.separator}></div>
 
-      <button className={css.btnLogout}>Logout</button>
-      <button className={css.logoutBtn} type="button" onClick={handleLogOut}>
+      <button
+        className={css.logoutBtn}
+        type="button"
+        onClick={handleLogOut}
+      >
         Logout
-      </button> 
+      </button>
     </div>
   );
 }

@@ -14,15 +14,15 @@ const authSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(register.fulfilled, (state, action) => {
-        state.user = action.payload.user;
+        state.user = action.payload.data;
         state.token = action.payload.token;
         state.isLoggedIn = true;
       })
       .addCase(login.fulfilled, (state, action) => {
-        state.user = action.payload.user;
-        state.token = action.payload.token;
+        state.user = action.payload.data.user;
+        state.token = action.payload.data.accessToken;
         state.isLoggedIn = true;
-      })
+})
       .addCase(logout.fulfilled, (state) => {
         state.user = { name: null, email: null };
         state.token = null;

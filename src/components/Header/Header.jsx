@@ -14,8 +14,6 @@ export default function Header() {
       <Logo />
       <div className={css.nav}>
         <Navigation />
-        <UserMenu />
-
          {isLoggedIn ? <UserMenu /> : <AuthNav />} 
       </div>
       <div className={css.burger}>svg</div>
