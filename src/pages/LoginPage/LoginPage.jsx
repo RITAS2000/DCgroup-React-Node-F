@@ -1,10 +1,12 @@
 import LoginForm from "../../components/LoginForm/LoginForm";
+import Container from "../../components/Container/Container";
 
 export default function LoginPage() {
   return (
-    <div>
-      <h1>Login</h1>
-      <LoginForm />
-    </div>
+    <Container variant="white">
+      <div>
+          <LoginForm />
+      </div>
+    </Container>
   );
 }
