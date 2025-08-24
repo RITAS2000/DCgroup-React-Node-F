@@ -4,7 +4,6 @@ import axios from 'axios';
 import LoadMoreBtn from '../LoadMoreBtn/LoadMoreBtn.jsx';
 import RecipeCard from '../RecipeCard/RecipeCard.jsx';
 import css from './RecipesList.module.css';
-// import recipes from './recipes.json';
 
 axios.defaults.baseURL =
   'https://dcgroup-react-node-b.onrender.com/api/recipes';
