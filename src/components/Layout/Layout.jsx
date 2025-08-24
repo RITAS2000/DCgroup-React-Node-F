@@ -17,8 +17,8 @@ export default function Layout({ children }) {
           fallback={
             <ColorRing
               visible={true}
-              height="80"
-              width="80"
+              height="120"
+              width="120"
               ariaLabel="color-ring-loading"
               wrapperStyle={{}}
               wrapperClass="color-ring-wrapper"
