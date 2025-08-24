@@ -4,35 +4,42 @@ import axios from 'axios';
 import LoadMoreBtn from '../LoadMoreBtn/LoadMoreBtn.jsx';
 import RecipeCard from '../RecipeCard/RecipeCard.jsx';
 import css from './RecipesList.module.css';
-// import recipes from './recipes.json';
 
-axios.defaults.baseURL =
-  'https://dcgroup-react-node-b.onrender.com/api/recipes';
+axios.defaults.baseURL = 'https://dcgroup-react-node-b.onrender.com/';
 
 export default function RecipesList() {
   const [recipes, setRecipes] = useState([]);
-  const [card, setCard] = useState(12);
+  const [page, setPage] = useState(1);
+  const [hasNextPage, setHasNextPage] = useState(true);
+  const [loading, setLoading] = useState(false);
   const lastCardRef = useRef(null);
   const scrollAfterLoad = useRef(false);
 
+  //отримуємо з бекенда всі картки рецептів
+  const fetchRecipes = async (page) => {
+    try {
+      setLoading(true);
+      const response = await axios.get(`api/recipes?page=${page}&perPage=12`);
+      const data = response.data?.data || {};
+      const recipesArray = data.data || [];
+
+      setRecipes((prev) => [...prev, ...recipesArray]); // додаємо нові до старих
+      setHasNextPage(data.hasNextPage);
+    } catch (error) {
+      console.error('Помилка при завантаженні рецептів:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchRecipes(page);
+  }, [page]);
+
   const handleLoadMore = () => {
     scrollAfterLoad.current = true;
-    setCard((prev) => prev + 12);
+    setPage((prev) => prev + 1);
   };
-  //отримуємо з бекенда всі картки рецептів
-  useEffect(() => {
-    const fetchRecipes = async () => {
-      try {
-        const response = await axios.get('/search');
-        const recipesArray = response.data?.data?.data || [];
-        // console.log('довжина', recipesArray);
-        setRecipes(recipesArray);
-      } catch (error) {
-        console.error('Помилка при завантаженні рецептів:', error);
-      }
-    };
-    fetchRecipes();
-  }, []);
 
   useEffect(() => {
     if (scrollAfterLoad.current && lastCardRef.current) {
@@ -42,15 +49,14 @@ export default function RecipesList() {
       });
       scrollAfterLoad.current = false;
     }
-  }, [card]);
+  }, [recipes]);
 
   return (
     <div className={css.recipe_container}>
       <ul className={css.recipe_list}>
-        {recipes
-          .slice(0, card)
-          .map(({ _id, thumb, title, time, description, calory }, index) => {
-            const isLastNew = index === card - 12; // перший новий елемент після "Load More"
+        {recipes.map(
+          ({ _id, thumb, title, time, description, calory }, index) => {
+            const isLastNew = index === recipes.length - 1; // перший новий елемент після "Load More"
             return (
               <li
                 className={css.recipe_item}
@@ -66,10 +72,13 @@ export default function RecipesList() {
                 />
               </li>
             );
-          })}
+          },
+        )}
       </ul>
 
-      {recipes.length > card && <LoadMoreBtn onClick={handleLoadMore} />}
+      {recipes.length > 0 && !loading && hasNextPage && (
+        <LoadMoreBtn onClick={handleLoadMore} />
+      )}
       {/* <LoadMoreBtn onClick={handleLoadMore} /> */}
     </div>
   );
