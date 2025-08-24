@@ -2,22 +2,33 @@ import Footer from '../Footer/Footer.jsx';
 import Header from '../Header/Header.jsx';
 import css from './Layout.module.css';
 import { Suspense, lazy } from 'react';
+import ReModalContainer from '../ReUseModal/ReModalContainer/ReModalContainer.jsx';
+import { ColorRing } from 'react-loader-spinner';
 
-const ReModalContainer = lazy(() =>
-  import('../ReUseModal/ReModalContainer/ReModalContainer.jsx'),
-);
 const Outlet = lazy(() => import('../Outlet/Outlet.jsx'));
 
 export default function Layout({ children }) {
   return (
     <div className={css.page}>
       <Header />
-      <Suspense fallback={<div>Завантаження модалки...</div>}>
-        <ReModalContainer />
-      </Suspense>
-      <Suspense fallback={<div>Завантаження контенту...</div>}>
-        <Outlet>{children}</Outlet>
-      </Suspense>
+      <ReModalContainer />
+      <div className={css['outlet-container']}>
+        <Suspense
+          fallback={
+            <ColorRing
+              visible={true}
+              height="80"
+              width="80"
+              ariaLabel="color-ring-loading"
+              wrapperStyle={{}}
+              wrapperClass="color-ring-wrapper"
+              colors={['#e15b64', '#f47e60', '#f8b26a', '#abbd81', '#849b87']}
+            />
+          }
+        >
+          <Outlet>{children}</Outlet>
+        </Suspense>
+      </div>
       <Footer />
     </div>
   );
