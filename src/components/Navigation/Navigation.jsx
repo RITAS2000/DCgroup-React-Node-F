@@ -16,7 +16,17 @@ export default function Navigation() {
       >
         Recipes
       </NavLink>
-
+      <NavLink
+        to="/user-profile"
+        className={({ isActive }) =>
+          isActive ? `${css.link} ${css.isActive}` : css.link
+        }
+      >
+        My Profile
+      </NavLink>
+      <NavLink className={css.asBTN} to="/add-recipe">
+        Add Recipe
+      </NavLink>
       {isLoggedIn && (
         <>
           <NavLink

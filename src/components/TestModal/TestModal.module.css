@@ -4,7 +4,7 @@
     left: 0;
     width: 100vw;
     height: 100vh;
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: rgba(0, 0, 0, 0.6);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -12,10 +12,10 @@
 }
 
 .modal {
-    background: white;
+    background: #faf3e0;
     padding: 20px;
-    border-radius: 8px;
-    max-width: 400px;
+    border-radius: 32px;
+    max-width: 361px;
     width: 90%;
     text-align: center;
 }

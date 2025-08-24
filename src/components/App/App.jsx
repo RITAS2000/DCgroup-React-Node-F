@@ -1,6 +1,9 @@
+
+
 import { lazy, Suspense } from 'react';
 import { Route, Routes, Navigate } from 'react-router-dom';
 import Layout from '../Layout/Layout.jsx';
+import { ToastContainer } from 'react-toastify';
 import PrivateRoute from '../PrivateRoute/PrivateRoute.jsx';
 
 const HomePage = lazy(() => import('../../pages/HomePage/HomePage.jsx'));
@@ -16,6 +19,10 @@ const ProfilePage = lazy(() =>
 );
 const NotFoundPage = lazy(() =>
   import('../../pages/NotFoundPage/NotFoundPage.jsx'),
+);
+
+const RecipeDetailsPage = lazy(() =>
+    import('../../pages/RecipeViewPage/RecipeViewPage.jsx'),
 );
 
 export default function App() {
@@ -34,13 +41,14 @@ export default function App() {
             <Route path=":recipeType" element={<ProfilePage />} />
           </Route>
           <Route path="/add-recipe" element={<AddRecipePage />} />
-          {/* <Route
+          <Route
             path="/recipes/:recipeId"
             element={<RecipeDetailsPage />}
-          ></Route> */}
+          ></Route>
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </Suspense>
+      <ToastContainer />
     </Layout>
   );
 }
