@@ -44,7 +44,7 @@ export default function RegistrationForm() {
           password: values.password,
         }));
     if (result.meta.requestStatus === 'fulfilled') {
-      navigate('/'); 
+      navigate('/login'); 
     }
 
     resetForm();
