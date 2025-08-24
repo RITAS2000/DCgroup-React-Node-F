@@ -24,8 +24,13 @@ export default function RecipesList() {
       const data = response.data?.data || {};
       console.log('API response:', response.data);
       const recipesArray = data.data || [];
-
-      setRecipes((prev) => [...prev, ...recipesArray]); // додаємо нові до старих
+      setRecipes((prev) => {
+        const newRecipes = recipesArray.filter(
+          (r) => !prev.some((p) => p._id === r._id),
+        );
+        return [...prev, ...newRecipes];
+      }); // ось це фільтруе однаковий ади але в чому причина я незнайшла - подивись чому так я не знаю
+      // setRecipes((prev) => [...prev, ...recipesArray]); // додаємо нові до старих
       setHasNextPage(data.hasNextPage);
     } catch (error) {
       console.error('Помилка при завантаженні рецептів:', error);
