@@ -1,8 +1,4 @@
 
-// import { useDispatch, useSelector } from "react-redux";
-
-// import { useEffect } from "react";
-
 import { useEffect, useState } from "react";
 import RecipeDetails from "../../components/RecipeDetails/RecipeDetails.jsx";
 import { useParams } from "react-router-dom";

@@ -3,35 +3,125 @@
     padding-top: 48px;
 }
 
-.image {
+@media screen and (min-width: 768px)  {
+    .holder {
+      display: flex;
+      flex-direction: column-reverse;
+    }
+}
+
+
+
+  .image {
+    width: 100%;
+    height: auto;
     border-radius: 8px;
     margin-bottom: 32px;
+    display: block;
+    object-fit: cover;
   }
+
+
+  @media screen and (min-width: 768px) and (max-width: 1399px) {
+    .image {
+      width: 100%;
+      max-width: 808px;
+      height: auto;
+    }
+  }
+  @media screen and (min-width: 1400px) {
+    .image {
+      width: 100%;
+      max-width: 1226px;
+      max-height: 624px;
+    }
+  }
+
 
 .title {
     color: #000000;
     font-weight: 600;
-    font-size: 48px;
+    font-size: 40px;
     line-height: 1.1;
     margin-bottom: 32px;
+}
+
+@media screen and (min-width: 768px) {
+    .title {
+        font-size: 48px;
+    }
+}
+
+
+@media screen and (min-width: 1400px) {
+    .case {
+        display: flex;
+        flex-direction: row-reverse;
+        gap: 32px;
+    }
+}
+.wrapper {
+    display: flex;
+    flex-direction: column;
+}
+
+@media screen and (min-width: 768px) and (max-width: 1399px) {
+    .wrapper {
+      flex-direction:row;
+      gap: 24px;
+    }
+}
+
+@media screen and (min-width: 1400px) {
+    .wrapper {
+      flex-direction:column;
+    }
 }
 
 .caption {
     font-size: 24px;
     line-height: 1;
     margin-bottom: 15px;
+    font-weight: 600;
 }
+
 .subtitle {
     font-weight: 600;
-    font-size: 32px;
+    font-size: 24px;
     line-height: 1;
     margin-bottom: 8px;
 }
 
-.heading {
-    font-size: 32px;
-    margin-bottom: 24px;
+@media screen and (min-width: 768px) {
+    .subtitle {
+        font-size: 32px;
+    }
+}
 
+.inner{
+    margin-bottom: 48px;
+}
+
+@media screen and (min-width: 1400px) {
+    .inner {
+       min-width: 808px;
+    }
+}
+
+.heading {
+    font-size: 24px;
+    margin-bottom: 24px;
+    font-weight: 600;
+}
+
+@media screen and (min-width: 768px) {
+    .heading {
+        font-size: 32px;
+    }
+}
+
+.list {
+    margin-bottom: 40px;
 }
 
 
@@ -53,8 +143,12 @@
 
 .text {
     font-size: 16px;
-    line-height: 1;
+    line-height: 1.5;
     margin-bottom: 15px;
+}
+
+.text:last-child {
+    margin-bottom: 0;
 }
 
 .desc {
@@ -67,6 +161,7 @@
 
 .paragraph {
     margin-bottom: 40px;
+    /* text-align: justify; */
 }
 
 .wrap {
@@ -76,96 +171,16 @@
     border-radius: 16px;
 }
 
-
-/* === Планшетна версія: від 768px ===
-@media screen and (min-width: 768px) {
-    .title {
-      font-size: 48px;
-    }
-
-    .subtitle {
-      font-size: 32px;
-      margin-bottom: 28px;
-    }
-    .heading {
-        font-size: 32px;
-        margin-bottom: 24px;
-
-    }
-
-    .caption {
-      font-size: 28px;
-      margin-bottom: 20px;
-    }
-
-    .text {
-      font-size: 18px;
-      margin-bottom: 20px;
-    }
-
-    .desc {
-      font-size: 18px;
-    }
-
+@media screen and (min-width: 768px) and (max-width: 1399px) {
     .wrap {
-      padding: 24px;
+        padding: 24px;
+        min-width: 451px;
     }
+}
 
-    .box {
-      padding-top: 64px;
-      padding-left: 24px;
-      padding-right: 24px;
-    }
-
-    .image {
-      max-width: 100%;
-      height: auto;
-      margin-bottom: 40px;
-    }
-  }
-
-   === Десктопна версія: від 1400px ===
-  @media screen and (min-width: 1400px) {
-    .box {
-      display: flex;
-      gap: 48px;
-      align-items: flex-start;
-      padding-top: 80px;
-      padding-left: 80px;
-      padding-right: 80px;
-    }
-
-    .image {
-      width: 480px;
-      height: auto;
-      flex-shrink: 0;
-    }
-
-    .title {
-      font-size: 64px;
-      margin-bottom: 48px;
-    }
-
-    .subtitle {
-      font-size: 40px;
-      margin-bottom: 32px;
-    }
-
-    .caption {
-      font-size: 32px;
-      margin-bottom: 24px;
-    }
-
-    .text {
-      font-size: 20px;
-      margin-bottom: 24px;
-    }
-
-    .desc {
-      font-size: 20px;
-    }
-
+@media screen and (min-width: 1400px) {
     .wrap {
-      padding: 32px;
+        padding: 32px;
+        min-width: 393px;
     }
-  } */
+}
