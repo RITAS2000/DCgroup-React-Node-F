@@ -1,0 +1,7 @@
+.hiddenInput {
+  display: none;
+}
+
+.placeholder {
+  cursor: pointer;
+}
