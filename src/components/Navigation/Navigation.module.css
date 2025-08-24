@@ -1,0 +1,25 @@
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+}
+
+.link {
+  border-bottom: none;
+}
+
+.isActive {
+  border-bottom: 1px solid #fff;
+}
+
+.asBTN {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  padding: 12px 16px;
+  width: 127px;
+  height: 44px;
+  background: #9b6c43;
+  font-size: 16px;
+}
