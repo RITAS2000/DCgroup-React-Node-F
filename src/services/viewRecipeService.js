@@ -37,3 +37,9 @@ export const delSavedRecipes = async (recipeId) => {
 }
 
 
+export const getAllIngredients = async () => {
+    const res = await axios.get(
+        `/api/ingredients/`,
+    );
+    return res.data;
+}
