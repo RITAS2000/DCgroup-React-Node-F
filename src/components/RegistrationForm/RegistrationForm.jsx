@@ -50,39 +50,70 @@ export default function RegistrationForm() {
     resetForm();
     };
     return ( 
-        <Formik
+       <Formik
           initialValues={initialValues}
           validationSchema={validationSchema}
           onSubmit={handleSubmit}
           >
-           <Form className={css.form}>
-               <label>
-                  Enter your name
-                 <Field name="name" type="text" placeholder="Max"/>
-               </label>
-               <label>
-                 Enter your email address
-                <Field name="email" type="email" placeholder="email@gmail.com"/>
-               </label>
-               <label>
-                Create a strong password
-                 <Field name="password" type="password" placeholder="********" />
-                </label>
-                <label>
-                 Repeat your password
-                <Field name="confirm" type="password" placeholder="********" />
-                </label>
-                <ErrorMessage name="confirm" component="div" />
-                <button type="submit">
-                 Create account
-                </button>
-                <p className={css.registerhint}>
+          <Form className={css.form}>
+            <label className={css.label}>
+              <span className={css.labelText}>Enter your email address</span>
+              <Field
+                name="email"
+                type="email"
+                placeholder="email@gmail.com"
+                className={css.input}
+              />
+          </label>
+          <label className={css.label}>
+               <span className={css.labelText}>Enter your name</span>
+               <Field
+                 name="name"
+                 type="text"
+                 placeholder="Max"
+                 className={css.input}
+               />
+            </label>
+
+           <label className={css.label}>
+               <span className={css.labelText}>Create a strong password</span>
+               <Field
+                 name="password"
+                 type="password"
+                 placeholder="********"
+                 className={css.input}
+                />
+            </label>
+
+            <label className={css.label}>
+              <span className={css.labelText}>Repeat your password</span>
+              <Field
+                name="confirm"
+                type="password"
+                placeholder="********"
+                className={css.input}
+              />
+           </label>
+
+          <ErrorMessage
+            name="confirm"
+            component="div"
+            className={css.error}
+          />
+
+          <button type="submit" className={css.button}>
+            Create account
+          </button>
+
+          <div className={css.box}>
+            <p className={css.registerHint}>
                 Already have an account?
-                <Link to="/login" className={css.registerlink}>
-                  Log in
-                </Link>
-              </p>
-          </Form>  
-        </Formik>
+               <Link to="/login" className={css.registerLink}>
+                Log in
+               </Link>
+             </p>
+          </div>
+        </Form>
+      </Formik>
     );
 }
