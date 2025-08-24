@@ -5,14 +5,14 @@ export default function AuthNav() {
   return (
     <div className={css.authNav}>
       <NavLink
-        to="/login"
+        to="/auth/login"
         className={({ isActive }) =>
           isActive ? `${css.link} ${css.isActive}` : css.link
         }
       >
         Log in
       </NavLink>
-      <NavLink className={css.asBTN} to="/register">
+      <NavLink className={css.asBTN} to="/auth/register">
         Register
       </NavLink>
     </div>
