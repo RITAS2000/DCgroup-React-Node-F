@@ -11,8 +11,7 @@
     margin-bottom: 24px;
 }
 
-@media screen and (min-device-pixel-ratio: 2) and (min-width: 768px),
-(min-resolution: 192dpi) and (min-width: 768px) {
+@media screen and  (min-width: 768px) {
     .recipe_list {
         display: grid;
         grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -25,8 +24,7 @@
     }
 }
 
-@media screen and (min-device-pixel-ratio: 2) and (min-width: 1440px),
-(min-resolution: 192dpi) and (min-width: 1440px) {
+@media screen and (min-width: 1440px){
     .recipe_list {
         display: grid;
         grid-template-columns: repeat(4, minmax(0, 1fr));
