@@ -32,9 +32,29 @@
 
 .closeBtn {
     position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    background-color: inherit;
     top: 16px;
-    right: 32px;
+    right: 16px;
     width: 24px;
     height: 24px;
 
+}
+
+@media (min-width: 768px) {
+.closeBtn {
+        position: absolute;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: none;
+        background-color: inherit;
+        top: 16px;
+        right: 32px;
+        width: 24px;
+        height: 24px;
+}
 }

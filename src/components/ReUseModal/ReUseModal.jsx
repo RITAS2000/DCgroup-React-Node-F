@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { closeModal } from '../../redux/modal/slice.js';
 import css from './ReUseModal.module.css';
+import { GrClose } from 'react-icons/gr';
 
 export default function ReUseModal({ children }) {
   const dispatch = useDispatch();
@@ -23,9 +24,7 @@ export default function ReUseModal({ children }) {
     <div className={css.backdrop} onClick={handleBackdropClick}>
       <div className={css.modal} onClick={handleModalClick}>
         <button onClick={handleClose} className={css.closeBtn}>
-          <svg width="24" height="24">
-            <use href="/sprite/symbol-defs.svg#icon-close" />
-          </svg>
+          <GrClose />
         </button>
         {children}
       </div>
