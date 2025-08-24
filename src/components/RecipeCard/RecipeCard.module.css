@@ -10,8 +10,8 @@
     height: 483px;
     background-color: #faf3e0;
 }
-@media screen and (min-device-pixel-ratio: 2) and (min-width: 1225px),
-(min-resolution: 192dpi) and (min-width: 1225px) {
+@media screen and (min-device-pixel-ratio: 2) and (min-width: 1440px),
+(min-resolution: 192dpi) and (min-width: 1440px) {
     .card {
     height: 431px;
     }
@@ -24,8 +24,8 @@
     margin-bottom: 16px;
 }
 
-@media screen and (min-device-pixel-ratio: 2) and (min-width: 1225px),
-(min-resolution: 192dpi) and (min-width: 1225px) {
+@media screen and (min-device-pixel-ratio: 2) and (min-width: 1440px),
+(min-resolution: 192dpi) and (min-width: 1440px) {
     .image {
     border-radius: 16px;
     width: 100%;
@@ -40,8 +40,8 @@
     justify-content: space-between;
 }
 
-@media screen and (min-device-pixel-ratio: 2) and (min-width: 1225px),
-(min-resolution: 192dpi) and (min-width: 1225px) {
+@media screen and (min-device-pixel-ratio: 2) and (min-width: 1440px),
+(min-resolution: 192dpi) and (min-width: 1440px) {
  .title_container {
     min-height: 58px;
 }
