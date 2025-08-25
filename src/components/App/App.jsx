@@ -2,6 +2,7 @@ import { lazy, Suspense } from 'react';
 import { Route, Routes, Navigate } from 'react-router-dom';
 import Layout from '../Layout/Layout.jsx';
 import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import RecipeDetails from '../RecipeDetails/RecipeDetails.jsx';
 import LoginForm from '../LoginForm/LoginForm.jsx';
 import RegistrationForm from '../RegistrationForm/RegistrationForm.jsx';
@@ -52,7 +53,11 @@ export default function App() {
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </Suspense>
-      <ToastContainer />
+      <ToastContainer
+        position="bottom-center"
+        autoClose={2500}
+        theme="colored"
+      />
     </Layout>
   );
 }

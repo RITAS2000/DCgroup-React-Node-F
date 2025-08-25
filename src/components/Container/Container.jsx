@@ -12,6 +12,8 @@ export default function Container({ children, variant }) {
   }
 
   return (
-    <div className={`${css.container} ${backgroundClass}`}>{children}</div>
+    <div className={`${css.container} ${variant ? backgroundClass : ''}`}>
+      {children}
+    </div>
   );
 }
