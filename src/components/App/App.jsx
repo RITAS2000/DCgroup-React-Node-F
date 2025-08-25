@@ -2,6 +2,11 @@ import { lazy, Suspense } from 'react';
 import { Route, Routes, Navigate } from 'react-router-dom';
 import Layout from '../Layout/Layout.jsx';
 import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import RecipeDetails from '../RecipeDetails/RecipeDetails.jsx';
+import LoginForm from '../LoginForm/LoginForm.jsx';
+import RegistrationForm from '../RegistrationForm/RegistrationForm.jsx';
+import RecipesList from '../RecipesList/RecipesList.jsx';
 
 const MainPage = lazy(() => import('../../pages/MainPage/MainPage.jsx'));
 const AuthPage = lazy(() => import('../../pages/AuthPage/AuthPage.jsx'));
@@ -25,19 +30,34 @@ export default function App() {
       <Suspense fallback={null}>
         <Routes>
           <Route path="/" element={<MainPage />} />
-          <Route path="/recipes/:id" element={<RecipeViewPage />} />
+
+          <Route path="/recipes" element={<RecipeViewPage />}>
+            <Route path=":id" element={<RecipeDetails />} />
+          </Route>
+
           <Route path="/add-recipe" element={<AddRecipePage />} />
-          <Route
-            path="/user-profile"
-            element={<Navigate to="/user-profile/own" replace />}
-          />
-          <Route path="/user-profile/:recipeType" element={<ProfilePage />} />
-          <Route path="/profile/:recipeType" element={<ProfilePage />} />
-          <Route path="/auth/:authType" element={<AuthPage />} />
+
+          <Route path="/profile" element={<ProfilePage />}>
+            <Route path="own" element={<RecipesList type="own" />} />
+            <Route
+              path="favorites"
+              element={<RecipesList type="favorites" />}
+            />
+          </Route>
+
+          <Route path="/auth" element={<AuthPage />}>
+            <Route path="register" element={<RegistrationForm />} />
+            <Route path="login" element={<LoginForm />} />
+          </Route>
+
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </Suspense>
-      <ToastContainer />
+      <ToastContainer
+        position="bottom-center"
+        autoClose={2500}
+        theme="colored"
+      />
     </Layout>
   );
 }
