@@ -45,10 +45,10 @@ export default function App() {
             />
           </Route>
 
-          <Route path="/auth" element={<AuthPage />}>
-            <Route path="register" element={<RegistrationForm />} />
+          <Route path="/auth/:authType" element={<AuthPage />} />
+          {/* <Route path="register" element={<RegistrationForm />} />
             <Route path="login" element={<LoginForm />} />
-          </Route>
+          </Route> */}
 
           <Route path="*" element={<NotFoundPage />} />
         </Routes>

@@ -2,7 +2,7 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:3000/api',
+  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:3000/',
   withCredentials: false,
 });
 
@@ -10,7 +10,7 @@ export const searchRecipes = createAsyncThunk(
   'recipes/search',
   async ({ title, category, ingredient, page = 1 }, { rejectWithValue }) => {
     try {
-      const { data } = await api.get('/recipes', {
+      const { data } = await api.get('api/recipes', {
         params: { title, category, ingredient, page },
       });
 
