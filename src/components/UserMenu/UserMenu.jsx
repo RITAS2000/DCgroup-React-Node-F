@@ -2,6 +2,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import css from './UserMenu.module.css';
 import { selectUser } from '../../redux/auth/selectors.js';
 import { logout } from '../../redux/auth/operations.js';
+import { Link } from 'react-router-dom';
 
 export default function UserMenu() {
   const dispatch = useDispatch();
@@ -20,9 +21,9 @@ export default function UserMenu() {
 
       <div className={css.separator}></div>
 
-      <button className={css.btnLogout} type="button" onClick={handleLogOut}>
+      <Link className={css.btnLogout} to="/" onClick={handleLogOut}>
         Logout
-      </button>
+      </Link>
     </div>
   );
 }
