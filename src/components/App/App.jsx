@@ -32,37 +32,30 @@ export default function App() {
         <Suspense fallback={null}>
           <Routes>
             <Route path="/" element={<MainPage />} />
-  
-            <Route path="/recipes" element={<RecipeViewPage />}>
-              <Route path=":id" element={<RecipeDetails />} />
-            </Route>
-  
-            <Route path="/add-recipe" element={<AddRecipePage />} />
-  
-            <Route path="/profile" element={<ProfilePage />}>
-              <Route path="own" element={<RecipesList type="own" />} />
-              <Route
-                path="favorites"
-                element={<RecipesList type="favorites" />}
-              />
-            </Route>
-  
-            <Route path="/auth/:authType" element={<AuthPage />} />
-            {/* <Route path="register" element={<RegistrationForm />} />
-              <Route path="login" element={<LoginForm />} />
-            </Route> */}
-  
-            <Route path="*" element={<NotFoundPage />} />
-          </Routes>
-        </Suspense>
-        <ToastContainer
-          position="bottom-center"
-          autoClose={2500}
-          theme="colored"
-        />
-      </Layout>
+ 
+          <Route path="/recipes/:recipeId" element={<RecipeViewPage />}></Route>
 
-      <ModalRoot />
-    </>
+          <Route path="/add-recipe" element={<AddRecipePage />} />
+
+          <Route path="/profile" element={<ProfilePage />}>
+            <Route path="own" element={<RecipesList type="own" />} />
+            <Route
+              path="favorites"
+              element={<RecipesList type="favorites" />}
+            />
+          </Route>
+
+          <Route path="/auth/:authType" element={<AuthPage />} />
+
+          <Route path="*" element={<NotFoundPage />} />
+        </Routes>
+      </Suspense>
+      <ToastContainer
+        position="bottom-center"
+        autoClose={2500}
+        theme="colored"
+      />
+    </Layout>
+
   );
 }

@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
 
 import LoadMoreBtn from '../LoadMoreBtn/LoadMoreBtn.jsx';
@@ -9,22 +9,30 @@ import {
   selectRecipes,
   selectRecipesLoading,
   selectRecipesError,
-  selectSearchMode, // НОВОЕ
+  selectSearchMode,
+  selectRecipesPage,
+  selectRecipesTotalPages,
+  selectSearchQuery,
 } from '../../redux/recipes/selectors';
+import { searchRecipes } from '../../redux/recipes/operations';
 
 // единый baseURL
 axios.defaults.baseURL =
-  import.meta.env.VITE_API_URL ||
-  'https://dcgroup-react-node-b.onrender.com/api';
+  import.meta.env.VITE_API_URL || 'https://dcgroup-react-node-b.onrender.com/';
 
 export default function RecipesList() {
-  // --- данные поиска из Redux ---
+  const dispatch = useDispatch();
+
+  // --- поиск из Redux ---
   const searched = useSelector(selectRecipes);
   const searchMode = useSelector(selectSearchMode);
   const searching = useSelector(selectRecipesLoading);
   const searchError = useSelector(selectRecipesError);
+  const searchPage = useSelector(selectRecipesPage);
+  const totalPages = useSelector(selectRecipesTotalPages);
+  const query = useSelector(selectSearchQuery);
 
-  // --- обычная лента (как у тебя было) ---
+  // --- обычная лента ---
   const [recipes, setRecipes] = useState([]);
   const [page, setPage] = useState(1);
   const [hasNextPage, setHasNextPage] = useState(true);
@@ -42,10 +50,10 @@ export default function RecipesList() {
       const recipesArray = data.data || [];
 
       setRecipes((prev) => {
-        const newRecipes = recipesArray.filter(
+        const add = recipesArray.filter(
           (r) => !prev.some((p) => p._id === r._id),
         );
-        return [...prev, ...newRecipes];
+        return [...prev, ...add];
       });
 
       setHasNextPage(Boolean(data.hasNextPage));
@@ -58,13 +66,10 @@ export default function RecipesList() {
 
   // грузим ленту только вне режима поиска
   useEffect(() => {
-    if (!searchMode) {
-      fetchRecipes(page);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    if (!searchMode) fetchRecipes(page);
   }, [page, searchMode]);
 
-  const handleLoadMore = () => {
+  const handleLoadMoreFeed = () => {
     scrollAfterLoad.current = true;
     setPage((prev) => prev + 1);
   };
@@ -79,11 +84,9 @@ export default function RecipesList() {
     }
   }, [recipes]);
 
-  // если режим поиска — показываем ТОЛЬКО результаты поиска (или пустое состояние)
+  // ===== РЕЖИМ ПОИСКА =====
   if (searchMode) {
-    if (searching) {
-      return <div className={css.recipe_container}>Loading…</div>;
-    }
+    if (searching) return <div className={css.recipe_container}>Loading…</div>;
     if (searchError) {
       return (
         <div className={css.recipe_container} style={{ color: 'crimson' }}>
@@ -91,9 +94,10 @@ export default function RecipesList() {
         </div>
       );
     }
-    if (!searched.length) {
+    if (!searched.length)
       return <div className={css.recipe_container}>Nothing found</div>;
-    }
+
+    const canLoadMore = searchPage < totalPages;
 
     return (
       <div className={css.recipe_container}>
@@ -110,12 +114,20 @@ export default function RecipesList() {
             </li>
           ))}
         </ul>
-        {/* В режиме поиска кнопки Load More нет */}
+
+        {canLoadMore && !searching && (
+          <LoadMoreBtn
+            onClick={() => {
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+              dispatch(searchRecipes({ ...query, page: searchPage + 1 }));
+            }}
+          />
+        )}
       </div>
     );
   }
 
-  // иначе — обычная лента
+  // ===== ОБЫЧНАЯ ЛЕНТА =====
   return (
     <div className={css.recipe_container}>
       <ul className={css.recipe_list}>
@@ -142,11 +154,12 @@ export default function RecipesList() {
       </ul>
 
       {recipes.length > 0 && !loadingFeed && hasNextPage && (
-        <LoadMoreBtn onClick={handleLoadMore} />
+        <LoadMoreBtn onClick={handleLoadMoreFeed} />
       )}
     </div>
   );
 }
+
 // import { useEffect, useState, useRef } from 'react';
 // import axios from 'axios';
 
