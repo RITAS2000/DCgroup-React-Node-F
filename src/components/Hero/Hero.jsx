@@ -1,5 +1,5 @@
 import s from './Hero.module.css';
-import heroDesk from '../../images/hero-desk.jpg'; // твой файл в src/images
+import heroDesk from '../../images/Hero-mobil.jpg';
 import SearchBox from '../SearchBox/SearchBox';
 import Container from '../Container/Container';
 
