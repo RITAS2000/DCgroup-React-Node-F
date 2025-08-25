@@ -5,12 +5,13 @@ import UserMenu from '../UserMenu/UserMenu.jsx';
 import AuthNav from '../AuthNav/AuthNav.jsx';
 import { selectIsLoggedIn } from '../../redux/auth/selectors.js';
 import css from './ModalMobileNav.module.css';
+import { closeBurger } from '../../redux/modal/burgerSlice.js';
 
 export default function ModalMobileNav() {
   const dispatch = useDispatch();
   const isLoggedIn = useSelector(selectIsLoggedIn);
 
-  const handleClose = () => dispatch(closeModal());
+  const handleClose = () => dispatch(closeBurger());
 
   return (
     <div className={css.overlay} onClick={handleClose}>

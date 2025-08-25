@@ -5,14 +5,14 @@ import Navigation from '../Navigation/Navigation.jsx';
 import UserMenu from '../UserMenu/UserMenu.jsx';
 import css from './Header.module.css';
 import { selectIsLoggedIn } from '../../redux/auth/selectors.js';
-import { selectModal } from '../../redux/modal/selectors.js';
-import { openModal } from '../../redux/modal/slice.js';
 import ModalMobileNav from '../ModalMobileNav/ModalMobileNav.jsx';
+import { openBurger } from '../../redux/modal/burgerSlice.js';
+import { selectBurgerOpen } from '../../redux/modal/selectors.js';
 
 export default function Header() {
   const isLoggedIn = useSelector(selectIsLoggedIn);
-  const modal = useSelector(selectModal);
   const dispatch = useDispatch();
+  const isOpen = useSelector(selectBurgerOpen);
 
   return (
     <header className={css.container}>
@@ -23,16 +23,13 @@ export default function Header() {
         {isLoggedIn ? <UserMenu /> : <AuthNav />}
       </div>
 
-      <div
-        className={css.burger}
-        onClick={() => dispatch(openModal({ type: 'mobileMenu' }))}
-      >
+      <div className={css.burger} onClick={() => dispatch(openBurger())}>
         <svg width="32" height="32">
           <use href="/sprite/symbol-defs.svg#icon-burger-menu" />
         </svg>
       </div>
 
-      {modal.isOpen && modal.type === 'mobileMenu' && <ModalMobileNav />}
+      {isOpen && <ModalMobileNav />}
     </header>
   );
 }
