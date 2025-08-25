@@ -15,8 +15,10 @@ export default function UserMenu() {
   return (
     <div className={css.userMenu}>
       <div className={css.userName}>
-        <div className={css.letter}>{user.name.charAt(0)}</div>
-        <span>{user.name}</span>
+        <div className={css.letter}>
+          {user?.name ? user.name.charAt(0) : ''}
+        </div>
+         <span>{user?.name || ''}</span>
       </div>
 
       <div className={css.separator}></div>
