@@ -35,7 +35,7 @@ export default function RecipesList() {
   const fetchRecipes = async (pageNum) => {
     try {
       setLoadingFeed(true);
-      const response = await axios.get('/recipes', {
+      const response = await axios.get('/api/recipes', {
         params: { page: pageNum, perPage: 12 },
       });
       const data = response.data?.data || {};
