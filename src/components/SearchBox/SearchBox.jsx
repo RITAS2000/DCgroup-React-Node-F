@@ -5,6 +5,9 @@ import { useDispatch } from 'react-redux';
 import { searchRecipes } from '../../redux/recipes/operations';
 import { setLastQuery } from '../../redux/recipes/slice';
 import { toast } from 'react-hot-toast';
+import { toast } from 'react-toastify';
+import { setQuery } from '../../redux/recipes/slice';
+
 
 const Schema = Yup.object({
   q: Yup.string().trim().min(2, 'мінімум 2 символи').required('Required'),
@@ -21,11 +24,16 @@ export default function SearchBox() {
         actions.setSubmitting(false);
         return;
       }
+      dispatch(setQuery({ title: q, category: '', ingredient: '' }));
+
 
       await dispatch(searchRecipes({ title: q, page: 1 })).unwrap();
       dispatch(setLastQuery(q)); // 🟢 зберігаємо пошуковий запит у Redux
+
+    
+
     } catch (e) {
-      toast.error(e);
+      toast.error(String(e));
     } finally {
       actions.setSubmitting(false);
     }

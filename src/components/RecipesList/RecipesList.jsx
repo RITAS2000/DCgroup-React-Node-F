@@ -1,7 +1,6 @@
 import { useEffect, useState, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux'; // 🟢 додав useDispatch
 import axios from 'axios';
-
 import LoadMoreBtn from '../LoadMoreBtn/LoadMoreBtn.jsx';
 import RecipeCard from '../RecipeCard/RecipeCard.jsx';
 import NoResultSearch from '../NoResultSearch/NoResultSearch.jsx'; // 🟢 додав
@@ -13,7 +12,13 @@ import {
   selectSearchMode, // НОВОЕ
   selectLastQuery, // 🟢 додав
   selectTotalItems, // 🟢 додав
+  selectSearchMode,
+  selectRecipesPage,
+  selectRecipesTotalPages,
+  selectSearchQuery,
+
 } from '../../redux/recipes/selectors';
+import { searchRecipes } from '../../redux/recipes/operations';
 
 import { clearResults } from '../../redux/recipes/slice'; // 🟢 для кнопки "reset пошуку"
 
@@ -22,17 +27,24 @@ axios.defaults.baseURL =
   import.meta.env.VITE_API_URL || 'https://dcgroup-react-node-b.onrender.com/';
 
 export default function RecipesList() {
+
   const dispatch = useDispatch(); // 🟢 потрібен для clearResults
 
-  // --- данные поиска из Redux ---
+
   const searched = useSelector(selectRecipes);
   const searchMode = useSelector(selectSearchMode);
   const searching = useSelector(selectRecipesLoading);
   const searchError = useSelector(selectRecipesError);
+
   const lastQuery = useSelector(selectLastQuery); // 🟢 показати, що шукали
   const totalResults = useSelector(selectTotalItems); // 🟢 кількість результатів
 
-  // --- обычная лента (как у тебя было) ---
+  const searchPage = useSelector(selectRecipesPage);
+  const totalPages = useSelector(selectRecipesTotalPages);
+  const query = useSelector(selectSearchQuery);
+
+
+  // --- обычная лента ---
   const [recipes, setRecipes] = useState([]);
   const [page, setPage] = useState(1);
   const [hasNextPage, setHasNextPage] = useState(true);
@@ -50,10 +62,10 @@ export default function RecipesList() {
       const recipesArray = data.data || [];
 
       setRecipes((prev) => {
-        const newRecipes = recipesArray.filter(
+        const add = recipesArray.filter(
           (r) => !prev.some((p) => p._id === r._id),
         );
-        return [...prev, ...newRecipes];
+        return [...prev, ...add];
       });
 
       setHasNextPage(Boolean(data.hasNextPage));
@@ -66,13 +78,10 @@ export default function RecipesList() {
 
   // грузим ленту только вне режима поиска
   useEffect(() => {
-    if (!searchMode) {
-      fetchRecipes(page);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    if (!searchMode) fetchRecipes(page);
   }, [page, searchMode]);
 
-  const handleLoadMore = () => {
+  const handleLoadMoreFeed = () => {
     scrollAfterLoad.current = true;
     setPage((prev) => prev + 1);
   };
@@ -87,11 +96,9 @@ export default function RecipesList() {
     }
   }, [recipes]);
 
-  // если режим поиска — показываем ТОЛЬКО результаты поиска (или пустое состояние)
+  // ===== РЕЖИМ ПОИСКА =====
   if (searchMode) {
-    if (searching) {
-      return <div className={css.recipe_container}>Loading…</div>;
-    }
+    if (searching) return <div className={css.recipe_container}>Loading…</div>;
     if (searchError) {
       return (
         <div className={css.recipe_container} style={{ color: 'crimson' }}>
@@ -99,6 +106,7 @@ export default function RecipesList() {
         </div>
       );
     }
+
     if (!searched.length) {
       // return <div className={css.recipe_container}>Nothing found</div>;
       return (
@@ -110,6 +118,10 @@ export default function RecipesList() {
         />
       );
     }
+   
+
+    const canLoadMore = searchPage < totalPages;
+
 
     return (
       <div className={css.recipe_container}>
@@ -126,12 +138,20 @@ export default function RecipesList() {
             </li>
           ))}
         </ul>
-        {/* В режиме поиска кнопки Load More нет */}
+
+        {canLoadMore && !searching && (
+          <LoadMoreBtn
+            onClick={() => {
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+              dispatch(searchRecipes({ ...query, page: searchPage + 1 }));
+            }}
+          />
+        )}
       </div>
     );
   }
 
-  // иначе — обычная лента
+  // ===== ОБЫЧНАЯ ЛЕНТА =====
   return (
     <div className={css.recipe_container}>
       <ul className={css.recipe_list}>
@@ -158,11 +178,12 @@ export default function RecipesList() {
       </ul>
 
       {recipes.length > 0 && !loadingFeed && hasNextPage && (
-        <LoadMoreBtn onClick={handleLoadMore} />
+        <LoadMoreBtn onClick={handleLoadMoreFeed} />
       )}
     </div>
   );
 }
+
 // import { useEffect, useState, useRef } from 'react';
 // import axios from 'axios';
 
