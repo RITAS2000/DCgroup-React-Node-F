@@ -27,6 +27,11 @@ export default function App() {
           <Route path="/" element={<MainPage />} />
           <Route path="/recipes/:id" element={<RecipeViewPage />} />
           <Route path="/add-recipe" element={<AddRecipePage />} />
+          <Route
+            path="/user-profile"
+            element={<Navigate to="/user-profile/own" replace />}
+          />
+          <Route path="/user-profile/:recipeType" element={<ProfilePage />} />
           <Route path="/profile/:recipeType" element={<ProfilePage />} />
           <Route path="/auth/:authType" element={<AuthPage />} />
           <Route path="*" element={<NotFoundPage />} />

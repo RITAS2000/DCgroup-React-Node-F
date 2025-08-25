@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getImageUrl, deleteFavorite, addFavorite } from '../../../api/recipes';
-import s from './RecipeCard.module.css';
-import { ReactComponent as FavorIcon } from '../../../images/svg/favor.svg';
-import { ReactComponent as ClockIcon } from '../../../images/svg/clock.svg';
+import s from './UserRecipeCard.module.css';
+import FavorIcon from '../../../images/svg/favor.svg?react';
+import ClockIcon from '../../../images/svg/clock.svg?react';
 
-export default function RecipeCard({
+export default function UserRecipeCard({
   item,
   mode = 'own',
   onRemoved,
@@ -64,7 +64,7 @@ export default function RecipeCard({
   }
 
   // Маячок: у консолі має бути об’єкт із ключами card, thumbWrap, ...
-  console.log('RecipeCard OK', s);
+  console.log('UserRecipeCard OK', s);
 
   return (
     <article className={s.card} data-rc="v2">

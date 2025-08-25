@@ -3,13 +3,12 @@ import {
   PAGE_SIZE,
   getOwnRecipes,
   getSavedRecipes,
-} from '../../../api/recipes';
-// щоб точно підтягнути правильний компонент
-import RecipeCard from '../RecipeCard/RecipeCard.jsx';
-import LoadMoreBtn from '../LoadMoreBtn/LoadMoreBtn';
-import s from './RecipesList.module.css';
+} from '../../../api/recipes.js';
+import UserRecipeCard from '../UserRecipeCard/UserRecipeCard.jsx';
+import LoadMoreBtn from '../LoadMoreBtn/LoadMoreBtn.jsx';
+import s from './UserRecipesList.module.css';
 
-export default function RecipesList({ type }) {
+export default function UserRecipesList({ type }) {
   const [items, setItems] = useState([]);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -132,7 +131,7 @@ export default function RecipesList({ type }) {
 
       <div className={s.grid}>
         {items.map((it) => (
-          <RecipeCard
+          <UserRecipeCard
             key={String(it.id ?? it._id)}
             item={it}
             mode={type === 'own' ? 'own' : 'favorites'}
@@ -144,7 +143,6 @@ export default function RecipesList({ type }) {
           />
         ))}
 
-        {/* Скелетони з правильними класами */}
         {loading &&
           Array.from({ length: PAGE_SIZE }).map((_, i) => (
             <div key={`sk-${i}`} className={s.skCard}>
