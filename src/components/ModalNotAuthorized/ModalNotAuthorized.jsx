@@ -46,13 +46,13 @@ const ModalNotAuthorized = () => {
         <div className={css.action}>
           <button
             className={css.loginBtn}
-            onClick={() => handleNavigate('/login')}
+            onClick={() => handleNavigate('/auth/login')}
           >
             Log in
           </button>
           <button
             className={css.registerBtn}
-            onClick={() => handleNavigate('/register')}
+            onClick={() => handleNavigate('/auth/register')}
           >
             Register
           </button>
