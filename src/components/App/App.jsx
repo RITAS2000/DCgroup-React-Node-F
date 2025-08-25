@@ -31,9 +31,10 @@ export default function App() {
         <Routes>
           <Route path="/" element={<MainPage />} />
 
-          <Route path="/recipes" element={<RecipeViewPage />}>
-            <Route path=":id" element={<RecipeDetails />} />
-          </Route>
+          <Route
+            path="/recipes/:recipeId"
+            element={<RecipeViewPage />}
+          ></Route>
 
           <Route path="/add-recipe" element={<AddRecipePage />} />
 

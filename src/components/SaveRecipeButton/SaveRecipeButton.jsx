@@ -1,4 +1,4 @@
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import css from './SaveRecipeButton.module.css';
 import { selectIsLoggedIn } from '../../redux/auth/selectors.js';
 import { delSavedRecipes, getSavedRecipes, postSavedRecipes } from '../../services/viewRecipeService.js';
@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { openModal } from '../../redux/modal/slice.js';
 
 
 export default function SaveRecipeButton({ recipeId }) {
@@ -13,6 +14,7 @@ export default function SaveRecipeButton({ recipeId }) {
     const [isSaved, setIsSaved] = useState(false);
 
     const isLoggedIn = useSelector(selectIsLoggedIn);
+    const dispatch = useDispatch();
 
 
     useEffect(() => {
@@ -47,6 +49,7 @@ export default function SaveRecipeButton({ recipeId }) {
                     setIsSaved(false);
                 } else {
                     console.log('not logged in');
+                    dispatch(openModal({}));
                 };
 
             } catch (error) {
@@ -66,6 +69,7 @@ export default function SaveRecipeButton({ recipeId }) {
                     setIsSaved(true);
                 } else {
                     console.log('not logged in');
+                    dispatch(openModal({}));
                 };
 
             } catch (error) {
