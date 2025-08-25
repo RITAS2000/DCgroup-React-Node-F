@@ -6,15 +6,34 @@ import addRecipeReducer from './addRecipe/sliceAddRecipe.js';
 import recipesReducer from './recipes/slice.js';
 import ingredientsReducer from './ingredient/slice.js';
 import categoriesReducer from './categorie/slice.js';
+import { persistStore, persistReducer, FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER } from "redux-persist";
+import storage from "redux-persist/lib/storage";
 
+
+const persistedAuthReducer = persistReducer(
+  {
+    key: 'user-token',
+    storage,
+    whitelist: ['token'],
+  },
+  authReducer,
+);
 export const store = configureStore({
   reducer: {
     userProfile: userProfileReducer,
-    auth: authReducer,
+    auth: persistedAuthReducer,
     modal: modalReducer,
     addRecipe: addRecipeReducer,
     recipes: recipesReducer,
     ingredients: ingredientsReducer,
     categories: categoriesReducer,
   },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: {
+        ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+      },
+    }),
 });
+
+export const persistor = persistStore(store);
