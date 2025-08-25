@@ -4,6 +4,7 @@ import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { register } from '../../redux/auth/operations';
 import { Link } from 'react-router-dom';
 import css from './RegistrationForm.module.css';
+import Container from "../Container/Container";
 
 import * as Yup from 'yup';
 
@@ -54,61 +55,62 @@ export default function RegistrationForm() {
       validationSchema={validationSchema}
       onSubmit={handleSubmit}
     >
-      <Form className={css.form}>
-        <label className={css.label}>
-          <span className={css.labelText}>Enter your email address</span>
-          <Field
-            name="email"
-            type="email"
-            placeholder="email@gmail.com"
-            className={css.input}
-          />
-        </label>
-        <label className={css.label}>
-          <span className={css.labelText}>Enter your name</span>
-          <Field
-            name="name"
-            type="text"
-            placeholder="Max"
-            className={css.input}
-          />
-        </label>
-
-        <label className={css.label}>
-          <span className={css.labelText}>Create a strong password</span>
-          <Field
-            name="password"
-            type="password"
-            placeholder="********"
-            className={css.input}
-          />
-        </label>
-
-        <label className={css.label}>
-          <span className={css.labelText}>Repeat your password</span>
-          <Field
-            name="confirm"
-            type="password"
-            placeholder="********"
-            className={css.input}
-          />
-        </label>
-
-        <ErrorMessage name="confirm" component="div" className={css.error} />
-
-        <button type="submit" className={css.button}>
-          Create account
-        </button>
-
-        <div className={css.box}>
-          <p className={css.registerHint}>
-            Already have an account?
-            <Link to="/login" className={css.registerLink}>
-              Log in
-            </Link>
-          </p>
+      <Container variant="white">
+        <div className={css.container}>
+          <Form className={css.form}>
+            <h2 className={css.title}>Register</h2>
+            <p className={css.text}>Join our community of culinary enthusiasts, save your favorite recipes, and share your cooking creations</p>
+            <label className={css.label}>
+              <span className={css.labelText}>Enter your email address</span>
+              <Field
+                name="email"
+                type="email"
+                placeholder="email@gmail.com"
+                className={css.input}
+              />
+            </label>
+            <label className={css.label}>
+              <span className={css.labelText}>Enter your name</span>
+              <Field
+                name="name"
+                type="text"
+                placeholder="Max"
+                className={css.input}
+              />
+            </label>
+            <label className={css.label}>
+              <span className={css.labelText}>Create a strong password</span>
+              <Field
+                name="password"
+                type="password"
+                placeholder="********"
+                className={css.input}
+              />
+            </label>
+            <label className={css.label}>
+              <span className={css.labelText}>Repeat your password</span>
+              <Field
+                name="confirm"
+                type="password"
+                placeholder="********"
+                className={css.input}
+              />
+            </label>
+            <ErrorMessage name="confirm" component="div" className={css.error} />
+            <button type="submit" className={css.button}>
+              Create account
+            </button>
+            <div className={css.box}>
+              <p className={css.registerHint}>
+                Already have an account?
+                <Link to="/login" className={css.registerLink}>
+                  Log in
+                </Link>
+              </p>
+            </div>
+          </Form>
         </div>
-      </Form>
+      </Container>
     </Formik>
   );
 }
