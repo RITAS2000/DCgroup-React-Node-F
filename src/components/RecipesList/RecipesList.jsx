@@ -1,27 +1,36 @@
 import { useEffect, useState, useRef } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux'; // 🟢 додав useDispatch
 import axios from 'axios';
 
 import LoadMoreBtn from '../LoadMoreBtn/LoadMoreBtn.jsx';
 import RecipeCard from '../RecipeCard/RecipeCard.jsx';
+import NoResultSearch from '../NoResultSearch/NoResultSearch.jsx'; // 🟢 додав
 import css from './RecipesList.module.css';
 import {
   selectRecipes,
   selectRecipesLoading,
   selectRecipesError,
   selectSearchMode, // НОВОЕ
+  selectLastQuery, // 🟢 додав
+  selectTotalItems, // 🟢 додав
 } from '../../redux/recipes/selectors';
+
+import { clearResults } from '../../redux/recipes/slice'; // 🟢 для кнопки "reset пошуку"
 
 // единый baseURL
 axios.defaults.baseURL =
   import.meta.env.VITE_API_URL || 'https://dcgroup-react-node-b.onrender.com/';
 
 export default function RecipesList() {
+  const dispatch = useDispatch(); // 🟢 потрібен для clearResults
+
   // --- данные поиска из Redux ---
   const searched = useSelector(selectRecipes);
   const searchMode = useSelector(selectSearchMode);
   const searching = useSelector(selectRecipesLoading);
   const searchError = useSelector(selectRecipesError);
+  const lastQuery = useSelector(selectLastQuery); // 🟢 показати, що шукали
+  const totalResults = useSelector(selectTotalItems); // 🟢 кількість результатів
 
   // --- обычная лента (как у тебя было) ---
   const [recipes, setRecipes] = useState([]);
@@ -91,7 +100,15 @@ export default function RecipesList() {
       );
     }
     if (!searched.length) {
-      return <div className={css.recipe_container}>Nothing found</div>;
+      // return <div className={css.recipe_container}>Nothing found</div>;
+      return (
+        // 🟢 додав замість слів Nothing found
+        <NoResultSearch
+          query={lastQuery}
+          totalResults={totalResults}
+          onReset={() => dispatch(clearResults())}
+        />
+      );
     }
 
     return (

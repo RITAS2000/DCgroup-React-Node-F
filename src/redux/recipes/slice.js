@@ -11,12 +11,24 @@ const initialState = {
   error: null,
   query: '',
   searchMode: false,
+  lastQuery: '', // 🟢 додав
 };
 
 const recipesSlice = createSlice({
   name: 'recipes',
   initialState,
-  reducers: {},
+  reducers: {
+    setLastQuery: (state, action) => {
+      // 🟢 додав тут
+      state.lastQuery = action.payload;
+    },
+    clearResults: (state) => {
+      state.items = [];
+      state.totalItems = 0;
+      state.searchMode = false;
+      state.lastQuery = '';
+    },
+  },
   extraReducers: (b) => {
     b.addCase(searchRecipes.pending, (s) => {
       s.loading = true;
@@ -28,7 +40,7 @@ const recipesSlice = createSlice({
         s.items = payload.recipes || [];
         s.page = payload.page;
         s.perPage = payload.perPage || 12;
-        s.totalItems = payload.total || 0;
+        s.totalItems = payload.totalItems || 0; // 🟢 змінив, було s.totalItems = payload.total || 0;
         s.totalPages = payload.totalPages || 0;
       })
       .addCase(searchRecipes.rejected, (s, { payload }) => {
@@ -40,5 +52,5 @@ const recipesSlice = createSlice({
   },
 });
 
-export const { setQuery, clearResults } = recipesSlice.actions;
+export const { setLastQuery, clearResults } = recipesSlice.actions; // 🟢 setLastQuery змінив було setQuery
 export default recipesSlice.reducer;

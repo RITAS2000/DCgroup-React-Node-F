@@ -3,6 +3,7 @@ import { Formik, Field, Form } from 'formik';
 import * as Yup from 'yup';
 import { useDispatch } from 'react-redux';
 import { searchRecipes } from '../../redux/recipes/operations';
+import { setLastQuery } from '../../redux/recipes/slice';
 import { toast } from 'react-hot-toast';
 
 const Schema = Yup.object({
@@ -11,7 +12,6 @@ const Schema = Yup.object({
 
 export default function SearchBox() {
   const dispatch = useDispatch();
-
   const initValues = { q: '' };
 
   const onSubmit = async (values, actions) => {
@@ -22,11 +22,8 @@ export default function SearchBox() {
         return;
       }
 
-      const res = await dispatch(searchRecipes({ title: q, page: 1 })).unwrap();
-
-      if (!res.recipes || res.recipes.length === 0) {
-        toast('Not found');
-      }
+      await dispatch(searchRecipes({ title: q, page: 1 })).unwrap();
+      dispatch(setLastQuery(q)); // 🟢 зберігаємо пошуковий запит у Redux
     } catch (e) {
       toast.error(e);
     } finally {
