@@ -16,11 +16,16 @@ export default function SearchBox() {
 
   const onSubmit = async (values, actions) => {
     try {
-      const res = await dispatch(
-        searchRecipes({ title: values.q, page: 1 }),
-      ).unwrap();
+      const q = values.q.trim();
+      if (!q) {
+        actions.setSubmitting(false);
+        return;
+      }
+
+      const res = await dispatch(searchRecipes({ title: q, page: 1 })).unwrap();
+
       if (!res.recipes || res.recipes.length === 0) {
-        toast('Not fond');
+        toast('Not found');
       }
     } catch (e) {
       toast.error(e);

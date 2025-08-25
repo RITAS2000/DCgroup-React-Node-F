@@ -13,10 +13,24 @@ export const searchRecipes = createAsyncThunk(
       const { data } = await api.get('/recipes', {
         params: { title, category, ingredient, page },
       });
-      return data.data;
+
+      const d = data?.data ?? {};
+      return {
+        recipes: d.data || [],
+        page: d.page ?? 1,
+        perPage: d.perPage ?? 12,
+        totalItems: d.totalItems ?? d.total ?? 0,
+        totalPages: d.totalPages ?? 0,
+      };
     } catch (err) {
       if (err.response?.status === 404) {
-        return rejectWithValue('Recipe not found');
+        return {
+          recipes: [],
+          page: 1,
+          perPage: 12,
+          totalItems: 0,
+          totalPages: 0,
+        };
       }
       return rejectWithValue(err.response?.data?.message || err.message);
     }

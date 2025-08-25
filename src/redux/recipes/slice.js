@@ -9,6 +9,8 @@ const initialState = {
   totalPages: 0,
   loading: false,
   error: null,
+  query: '',
+  searchMode: false,
 };
 
 const recipesSlice = createSlice({
@@ -19,6 +21,7 @@ const recipesSlice = createSlice({
     b.addCase(searchRecipes.pending, (s) => {
       s.loading = true;
       s.error = null;
+      s.searchMode = true;
     })
       .addCase(searchRecipes.fulfilled, (s, { payload }) => {
         s.loading = false;
@@ -31,8 +34,11 @@ const recipesSlice = createSlice({
       .addCase(searchRecipes.rejected, (s, { payload }) => {
         s.loading = false;
         s.error = payload;
+        s.items = [];
+        s.searchMode = true;
       });
   },
 });
 
+export const { setQuery, clearResults } = recipesSlice.actions;
 export default recipesSlice.reducer;
