@@ -14,8 +14,7 @@ import {
 
 // единый baseURL
 axios.defaults.baseURL =
-  import.meta.env.VITE_API_URL ||
-  'https://dcgroup-react-node-b.onrender.com/api';
+  import.meta.env.VITE_API_URL || 'https://dcgroup-react-node-b.onrender.com/';
 
 export default function RecipesList() {
   // --- данные поиска из Redux ---
