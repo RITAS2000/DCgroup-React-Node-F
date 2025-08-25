@@ -31,6 +31,11 @@ export default function App() {
         <Routes>
           <Route path="/" element={<MainPage />} />
 
+          {/* <Route
+            path="/recipes/:recipeId"
+            element={<RecipeViewPage />}
+          ></Route> */}
+
           <Route path="/recipes" element={<RecipeViewPage />}>
             <Route path=":id" element={<RecipeDetails />} />
           </Route>
