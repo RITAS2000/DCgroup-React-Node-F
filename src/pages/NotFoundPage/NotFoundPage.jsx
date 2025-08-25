@@ -24,7 +24,7 @@ export default function NotFoundPage() {
           <img
             className={css.img}
             src={imgMobil1x}
-            alt="women-cooking"
+            alt="Empty plate"
             width="361"
             height="267"
           />

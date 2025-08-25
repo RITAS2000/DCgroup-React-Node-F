@@ -55,83 +55,9 @@
   transform: scaleX(1);
 }
 
-/* ---------- Grid for cards (cards styled in RecipeCard.module.css) ---------- */
-.grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 12px;
-}
-
-/* ---------- Load more ---------- */
-.actions {
-  display: flex;
-  justify-content: center;
-  margin-top: 16px;
-}
-
-.loadMore {
-  border: 0;
-  background: #cf9e6b;
-  color: #fff;
-  font-weight: 700;
-  padding: 12px 18px;
-  border-radius: 12px;
-  cursor: pointer;
-}
-.loadMore:disabled {
-  opacity: 0.6;
-  cursor: default;
-}
-
-/* ---------- Empty / Error ---------- */
-.empty,
-.error {
-  margin: 20px 0;
-  text-align: center;
-  color: #6b6259;
-}
-
-/* ---------- Simple skeleton placeholder ---------- */
-.skeleton {
-  height: 260px; /* приблизна висота картки */
-  border-radius: 14px;
-  border: 1px solid #eee7df;
-  background: linear-gradient(90deg, #eee 25%, #f4f4f4 37%, #eee 63%);
-  background-size: 400% 100%;
-  animation: sh 1.2s ease-in-out infinite;
-}
-
-@keyframes sh {
-  0% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0 50%;
-  }
-}
-
-/* ---------- Breakpoints ---------- */
-@media (min-width: 480px) {
-  .grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 14px;
-  }
-}
+/* невеликий апдейт заголовка на брейкпойнті */
 @media (min-width: 768px) {
-  .wrap {
-    padding: 20px 24px 100px;
-  }
-  .grid {
-    grid-template-columns: repeat(3, 1fr);
-    gap: 16px;
-  }
   .h1 {
     font-size: 26px;
-  }
-}
-@media (min-width: 1024px) {
-  .grid {
-    grid-template-columns: repeat(4, 1fr);
-    gap: 18px;
   }
 }

@@ -1,11 +1,11 @@
-// src/components/UserProfile/RecipesList/RecipesList.jsx
 import { useEffect, useRef, useState } from 'react';
 import {
   PAGE_SIZE,
   getOwnRecipes,
   getSavedRecipes,
 } from '../../../api/recipes';
-import RecipeCard from '../RecipeCard/RecipeCard';
+// щоб точно підтягнути правильний компонент
+import RecipeCard from '../RecipeCard/RecipeCard.jsx';
 import LoadMoreBtn from '../LoadMoreBtn/LoadMoreBtn';
 import s from './RecipesList.module.css';
 
@@ -15,7 +15,6 @@ export default function RecipesList({ type }) {
   const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(false);
   const [err, setErr] = useState('');
-  // тригер для форс-рендера після очищення токена
   const [authVer, bumpAuthVer] = useState(0);
 
   const token = localStorage.getItem('accessToken') || '';
@@ -25,7 +24,6 @@ export default function RecipesList({ type }) {
   const reqIdRef = useRef(0);
   const abortRef = useRef(null);
 
-  // утиліта: визначаємо саме “прострочений токен”
   const isTokenExpired = (msg = '') => /access token expired/i.test(msg);
 
   useEffect(() => {
@@ -34,7 +32,7 @@ export default function RecipesList({ type }) {
     setTotalPages(1);
     setErr('');
 
-    if (isPrivate && !token) return; // без токена приватні не вантажимо
+    if (isPrivate && !token) return;
     void loadPage(1, true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [type, token, authVer]);
@@ -62,7 +60,6 @@ export default function RecipesList({ type }) {
     setErr('');
     const myReqId = ++reqIdRef.current;
 
-    // скасовуємо попередній запит
     abortRef.current?.abort();
     const ctrl = new AbortController();
     abortRef.current = ctrl;
@@ -83,10 +80,8 @@ export default function RecipesList({ type }) {
               signal: ctrl.signal,
             });
 
-      // якщо за час запиту змінився тип/сторінка — ігноруємо відповідь
       if (reqIdRef.current !== myReqId) return;
 
-      // дедуп по id/_id
       setItems((prev) => {
         const merged = replace ? res.items : [...prev, ...res.items];
         const seen = new Set();
@@ -112,13 +107,12 @@ export default function RecipesList({ type }) {
             ),
       );
     } catch (e) {
-      // якщо токен прострочився — робимо “автовихід” і не показуємо помилку
       const msg = e?.message || '';
       if (isTokenExpired(msg) || e?.status === 401) {
         localStorage.removeItem('accessToken');
         setItems([]);
-        setErr(''); // не показуємо “Access token expired”
-        bumpAuthVer((v) => v + 1); // форс-рендер, щоб зчитати свіжий токен ('')
+        setErr('');
+        bumpAuthVer((v) => v + 1);
       } else if (e?.name !== 'AbortError') {
         setErr(msg || 'Failed to load');
       }
@@ -132,7 +126,6 @@ export default function RecipesList({ type }) {
 
   return (
     <>
-      {/* Показуємо інші помилки, але не “Access token expired” */}
       {err && !/access token expired/i.test(err) && (
         <div className={s.error}>⚠ {err}</div>
       )}
@@ -151,12 +144,15 @@ export default function RecipesList({ type }) {
           />
         ))}
 
+        {/* Скелетони з правильними класами */}
         {loading &&
           Array.from({ length: PAGE_SIZE }).map((_, i) => (
-            <div
-              key={`sk-${i}`}
-              className={`${s.sceletonCard} ${s.skeleton}`}
-            />
+            <div key={`sk-${i}`} className={s.skCard}>
+              <div className={s.skThumb} />
+              <div className={s.skLine} />
+              <div className={s.skLineSm} />
+              <div className={s.skLineSm} />
+            </div>
           ))}
       </div>
 
