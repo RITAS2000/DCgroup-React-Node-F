@@ -1,24 +1,41 @@
 import s from './SearchBox.module.css';
 import { Formik, Field, Form } from 'formik';
 import * as Yup from 'yup';
+import { useDispatch } from 'react-redux';
+import { searchRecipes } from '../../redux/recipes/operations';
+import { toast } from 'react-hot-toast';
 
-const SearchSchema = Yup.object().shape({
-  q: Yup.string().required('Required'),
+const Schema = Yup.object({
+  q: Yup.string().trim().min(2, 'мінімум 2 символи').required('Required'),
 });
 
 export default function SearchBox() {
+  const dispatch = useDispatch();
+
   const initValues = { q: '' };
-  const onSubmit = async (values) => {
-    console.log(values);
+
+  const onSubmit = async (values, actions) => {
+    try {
+      const res = await dispatch(
+        searchRecipes({ title: values.q, page: 1 }),
+      ).unwrap();
+      if (!res.recipes || res.recipes.length === 0) {
+        toast('Not fond');
+      }
+    } catch (e) {
+      toast.error(e);
+    } finally {
+      actions.setSubmitting(false);
+    }
   };
 
   return (
     <Formik
       initialValues={initValues}
+      validationSchema={Schema}
       onSubmit={onSubmit}
-      validationSchema={SearchSchema}
     >
-      {({ errors, touched }) => (
+      {({ errors, touched, isSubmitting }) => (
         <Form className={s.searchbox}>
           <div className="form-field">
             <Field
@@ -26,15 +43,12 @@ export default function SearchBox() {
               type="text"
               placeholder="Search recipes"
               className={`${s.input} ${errors.q && touched.q ? s.error : ''}`}
-              autoComplete="off"
             />
-            {errors.q && touched.q ? (
-              <span className={s.error} aria-live="polite">
-                {errors.q}
-              </span>
-            ) : null}
+            {errors.q && touched.q && (
+              <span className={s.error}>{errors.q}</span>
+            )}
           </div>
-          <button type="submit" className={s.btn}>
+          <button type="submit" className={s.btn} disabled={isSubmitting}>
             Search
           </button>
         </Form>

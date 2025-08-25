@@ -1,10 +1,11 @@
 .searchbox {
   display: flex;
-  align-items: flex-start;
-  justify-content: flex-start;
+  align-items: center;
   flex-direction: column;
   gap: 24px;
   font-family: 'Montserrat', sans-serif;
+  width: 100%;
+  align-items: stretch;
 }
 .searchbox .form-field {
   display: flex;
@@ -17,8 +18,10 @@
 .searchbox .input {
   border: 1px solid #d9d9d9;
   border-radius: 8px;
+
   padding: 12px;
-  width: 329px;
+  width: 100%;
+
   height: 46px;
   max-height: 48px;
   font-weight: 400;
