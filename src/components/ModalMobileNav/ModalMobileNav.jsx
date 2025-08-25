@@ -16,7 +16,9 @@ export default function ModalMobileNav() {
     <div className={css.overlay} onClick={handleClose}>
       <div className={css.menu} onClick={(e) => e.stopPropagation()}>
         <button className={css.close} onClick={handleClose}>
-          ✕
+          <svg width="32" height="32">
+            <use href="/sprite/symbol-defs.svg#icon-close" />
+          </svg>
         </button>
 
         <nav className={css.nav}>

@@ -19,6 +19,7 @@ export default function Header() {
       <Logo />
       <div className={css.nav}>
         <Navigation />
+
         {isLoggedIn ? <UserMenu /> : <AuthNav />}
       </div>
 
@@ -26,7 +27,9 @@ export default function Header() {
         className={css.burger}
         onClick={() => dispatch(openModal({ type: 'mobileMenu' }))}
       >
-        svg
+        <svg width="32" height="32">
+          <use href="/sprite/symbol-defs.svg#icon-burger-menu" />
+        </svg>
       </div>
 
       {modal.isOpen && modal.type === 'mobileMenu' && <ModalMobileNav />}
