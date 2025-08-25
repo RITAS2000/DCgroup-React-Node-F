@@ -3,7 +3,8 @@ import { Formik, Field, Form } from 'formik';
 import * as Yup from 'yup';
 import { useDispatch } from 'react-redux';
 import { searchRecipes } from '../../redux/recipes/operations';
-import { toast } from 'react-hot-toast';
+import { toast } from 'react-toastify';
+import { setQuery } from '../../redux/recipes/slice';
 
 const Schema = Yup.object({
   q: Yup.string().trim().min(2, 'мінімум 2 символи').required('Required'),
@@ -11,7 +12,6 @@ const Schema = Yup.object({
 
 export default function SearchBox() {
   const dispatch = useDispatch();
-
   const initValues = { q: '' };
 
   const onSubmit = async (values, actions) => {
@@ -21,14 +21,14 @@ export default function SearchBox() {
         actions.setSubmitting(false);
         return;
       }
+      dispatch(setQuery({ title: q, category: '', ingredient: '' }));
 
       const res = await dispatch(searchRecipes({ title: q, page: 1 })).unwrap();
-
       if (!res.recipes || res.recipes.length === 0) {
-        toast('Not found');
+        toast.info('Nothing found');
       }
     } catch (e) {
-      toast.error(e);
+      toast.error(String(e));
     } finally {
       actions.setSubmitting(false);
     }
