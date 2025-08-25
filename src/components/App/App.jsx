@@ -31,14 +31,7 @@ export default function App() {
         <Routes>
           <Route path="/" element={<MainPage />} />
 
-          {/* <Route
-            path="/recipes/:recipeId"
-            element={<RecipeViewPage />}
-          ></Route> */}
-
-          <Route path="/recipes" element={<RecipeViewPage />}>
-            <Route path=":id" element={<RecipeDetails />} />
-          </Route>
+          <Route path="/recipes/:recipeId" element={<RecipeViewPage />}></Route>
 
           <Route path="/add-recipe" element={<AddRecipePage />} />
 
@@ -51,9 +44,6 @@ export default function App() {
           </Route>
 
           <Route path="/auth/:authType" element={<AuthPage />} />
-          {/* <Route path="register" element={<RegistrationForm />} />
-            <Route path="login" element={<LoginForm />} />
-          </Route> */}
 
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
