@@ -1,15 +1,16 @@
 import { useDispatch, useSelector } from 'react-redux';
 import css from './UserMenu.module.css';
 import { selectUser } from '../../redux/auth/selectors.js';
-import { logout } from '../../redux/auth/operations.js';
 import { Link } from 'react-router-dom';
+import { openModal } from '../../redux/modal/slice.js';
 
 export default function UserMenu() {
   const dispatch = useDispatch();
   const user = useSelector(selectUser);
 
-  const handleLogOut = () => {
-    dispatch(logout());
+  const handleLogOut = (e) => {
+    e.preventDefault(); 
+    dispatch(openModal({type: 'logoutConfirm'}));
   };
 
   return (

@@ -53,8 +53,8 @@
   justify-content: center;
 }
 
-.loginBtn,
-.registerBtn {
+.logoutBtn,
+.cancelBtn {
   border-radius: 4px;
   border-style: 1px solid #000000;
   width: 164px;
@@ -62,15 +62,17 @@
   padding-bottom: 8px;
   transition: background-color 0.25s ease, color 0.25s ease;
 }
-.loginBtn:hover,
-.loginBtn:focus {
+
+.cancelBtn:hover,
+.cancelBtn:focus {
   color: white;
-  background-color: #9b6c43;
+  background-color: #c80000;
   border-style: none;
 }
-.registerBtn:hover,
-.registerBtn:focus {
+
+.logoutBtn:hover,
+.logoutBtn:focus {
   color: white;
-  background-color: #9b6c43;
+  background-color: #c80000;
   border-style: none;
 }

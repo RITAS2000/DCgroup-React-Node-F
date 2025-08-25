@@ -4,17 +4,17 @@ import { selectIsLoggedIn } from '../../redux/auth/selectors.js';
 import css from './FooterLink.module.css';
 import { openModal } from '../../redux/modal/slice.js';
 import ModalNotAuthorized from '../ModalNotAuthorized/ModalNotAuthorized.jsx';
-import { selectIsModalOpen } from '../../redux/modal/selectors.js';
+// import { selectIsModalOpen } from '../../redux/modal/selectors.js';
 
 export default function FooterLink() {
   const isLoggedIn = useSelector(selectIsLoggedIn);
-  const isModalOpen = useSelector(selectIsModalOpen);
+  // const isModalOpen = useSelector(selectIsModalOpen);
   const dispatch = useDispatch();
 
   const handleAccountClick = (e) => {
     if (!isLoggedIn) {
       e.preventDefault();
-      dispatch(openModal());
+      dispatch(openModal({type: 'notAuthorized'}));
     }
   };
 
@@ -37,7 +37,7 @@ export default function FooterLink() {
       >
         Account
       </NavLink>
-      {isModalOpen && <ModalNotAuthorized />}
+      {/* {isModalOpen && <ModalNotAuthorized />} */}
     </div>
   );
 }
