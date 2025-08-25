@@ -3,7 +3,6 @@
   max-width: 393px;
   margin: 0 auto;
   padding: 0 16px;
-  /* background-color: #fbfcf8; */
 }
 @media (min-width: 768px) {
   .container {
@@ -24,4 +23,7 @@
 
 .bgDark {
   background-color: #3d2218;
+}
+.bgTransparent {
+  background: transparent;
 }

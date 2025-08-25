@@ -8,7 +8,9 @@
 .logo {
     width: 32px;
     height: 30px;
-    background-color: aqua;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .text {
