@@ -15,7 +15,13 @@ export default function Layout({ children }) {
       <ModalNotAuthorized />
       {/* <ReModalContainer /> */}
       <div className={css['outlet-container']}>
-        <Suspense fallback={<ClockLoader color="#3d2218" size={300} />}>
+        <Suspense
+          fallback={
+            <div className={css.loader}>
+              <ClockLoader color="#3d2218" size={300} />
+            </div>
+          }
+        >
           <Outlet>{children}</Outlet>
         </Suspense>
       </div>
