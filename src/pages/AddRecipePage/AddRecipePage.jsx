@@ -8,7 +8,7 @@ import {
 } from 'formik';
 import { useId } from 'react';
 import { useDispatch } from 'react-redux';
-// import toast from 'react-hot-toast';
+import toast from 'react-hot-toast';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
@@ -35,7 +35,7 @@ const AddRecipePage = () => {
   const navigate = useNavigate();
 
   const initialValues = {
-    photo: null,
+    thumb: null,
     title: '',
     description: '',
     time: '',
@@ -58,19 +58,19 @@ const AddRecipePage = () => {
     for (const key in values) {
       if (key === 'ingredients') {
         formData.append(key, JSON.stringify(sanitizedIngredients));
-      } else if (key === 'photo' && values.photo) {
-        formData.append(key, values.photo); // File
+      } else if (key === 'thumb' && values.thumb) {
+        formData.append(key, values.thumb); // File
       } else if (key !== 'ingredientsName' && key !== 'amount') {
         formData.append(key, values[key]);
       }
     }
     try {
       const result = await dispatch(addRecipe(formData)).unwrap();
-      // toast.success('Recipe added successfully!');
+      toast.success('Recipe added successfully!');
       actions.resetForm();
       navigate(`/recipes/${result.data._id}`);
     } catch {
-      // toast.error('Failed to add recipe. Please try again.');
+      toast.error('Failed to add recipe. Please try again.');
     }
   };
 
@@ -89,19 +89,19 @@ const AddRecipePage = () => {
               <h3>Upload Photo</h3>
               <input
                 id={photoId}
-                name="photo"
+                name="thumb"
                 type="file"
                 accept="image/*"
                 onChange={(event) => {
-                  setFieldValue('photo', event.currentTarget.files[0]);
+                  setFieldValue('thumb', event.currentTarget.files[0]);
                 }}
                 className={css.hiddenInput}
               />
 
               <label htmlFor={photoId} className={css.uploadBox}>
-                {values.photo ? (
+                {values.thumb ? (
                   <img
-                    src={URL.createObjectURL(values.photo)}
+                    src={URL.createObjectURL(values.thumb)}
                     alt="Preview"
                     className={css.previewImage}
                   />
@@ -114,7 +114,7 @@ const AddRecipePage = () => {
               </label>
               <ErrorMessage
                 className={css.errorMsg}
-                name="photo"
+                name="thumb"
                 component="span"
               />
             </div>
@@ -207,7 +207,7 @@ const AddRecipePage = () => {
               </div>
             </fieldset>
 
-            <fieldset className={css.fieldset}>
+            <fieldset className={css.ingredientsFieldset}>
               <legend>Ingredients</legend>
               <div className={css.ingredientsWrapper}>
                 <label className={css.label} htmlFor={ingredientsNameFieldId}>
@@ -239,10 +239,11 @@ const AddRecipePage = () => {
                 />
               </div>
 
-              <FieldArray name="ingredients">
+              <FieldArray className={css.ingredientsArr} name="ingredients">
                 {({ push, remove }) => (
                   <>
                     <button
+                      className={css.ingredientsBtn}
                       type="button"
                       onClick={() => {
                         const name = values.ingredientsName.trim();
