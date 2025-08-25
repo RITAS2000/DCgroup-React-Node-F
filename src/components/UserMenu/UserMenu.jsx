@@ -18,13 +18,15 @@ export default function UserMenu() {
         <div className={css.letter}>
           {user?.name ? user.name.charAt(0) : ''}
         </div>
-         <span>{user?.name || ''}</span>
+        <span>{user?.name || ''}</span>
       </div>
 
       <div className={css.separator}></div>
 
       <Link className={css.btnLogout} to="/" onClick={handleLogOut}>
-        Logout
+        <svg width="24" height="24">
+          <use href="/sprite/symbol-defs.svg#icon-log-out" />
+        </svg>
       </Link>
     </div>
   );
