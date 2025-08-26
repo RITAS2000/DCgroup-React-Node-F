@@ -13,21 +13,16 @@ export default function UserRecipeCard({
   const loc = useLocation();
   const [pending, setPending] = useState(false);
 
-  // 👇 інколи бек віддає { recipe: {...} }, інколи просто {...}
   const r = item?.recipe ?? item ?? {};
 
-  // універсальні запасні ключі
   const recipeId = r.id || r._id || r.recipeId || item?.recipeId;
   const heading = r.title || r.name || 'Recipe';
   const desc = r.description || r.desc || '';
   const time = r.time ?? r.cookTime ?? r.totalTime ?? '';
   const cals = r.cals ?? r.calories ?? r.calory;
-
-  // зображення берімо з найпоширеніших полів
   const rawImg = r.photo || r.thumb || r.image || r.img || '';
   const img = getImageUrl(rawImg);
 
-  // вкладка “own” — без закладки; “favorites” — з активною закладкою
   const isFavoritesTab =
     /\/profile\/favorites/.test(loc.pathname) || mode === 'favorites';
   const [isSaved, setIsSaved] = useState(!!isFavoritesTab);
@@ -70,7 +65,6 @@ export default function UserRecipeCard({
             alt={heading}
             loading="lazy"
             onError={(e) => {
-              // запасний плейсхолдер, якщо зображення не завантажилось
               e.currentTarget.src = getImageUrl('/images/placeholder.png');
             }}
           />
@@ -118,7 +112,9 @@ export default function UserRecipeCard({
 
       <div className={s.footerRow}>
         <button
-          className={s.moreBtn}
+          className={`${s.moreBtn} ${
+            mode === 'own' ? s.moreBtnOwn : s.moreBtnFav
+          }`}
           type="button"
           onClick={() => recipeId && navigate(`/recipes/${recipeId}`)}
           disabled={!recipeId}
@@ -126,7 +122,6 @@ export default function UserRecipeCard({
           Learn more
         </button>
 
-        {/* показуємо закладку тільки на вкладці “Saved” */}
         {isFavoritesTab && (
           <button
             type="button"
