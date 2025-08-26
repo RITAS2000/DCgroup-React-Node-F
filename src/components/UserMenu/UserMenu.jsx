@@ -3,13 +3,17 @@ import css from './UserMenu.module.css';
 import { selectUser } from '../../redux/auth/selectors.js';
 import { logout } from '../../redux/auth/operations.js';
 import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
-export default function UserMenu() {
+export default function UserMenu({ onClick }) {
   const dispatch = useDispatch();
   const user = useSelector(selectUser);
+  const navigate = useNavigate();
 
-  const handleLogOut = () => {
-    dispatch(logout());
+  const handleLogOut = async () => {
+    await dispatch(logout());
+    navigate('/');
+    if (onClick) onClick();
   };
 
   return (
@@ -23,11 +27,11 @@ export default function UserMenu() {
 
       <div className={css.separator}></div>
 
-      <Link className={css.btnLogout} to="/" onClick={handleLogOut}>
+      <button className={css.btnLogout} onClick={handleLogOut}>
         <svg width="24" height="24">
           <use href="/sprite/symbol-defs.svg#icon-log-out" />
         </svg>
-      </Link>
+      </button>
     </div>
   );
 }

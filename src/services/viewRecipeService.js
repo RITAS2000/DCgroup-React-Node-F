@@ -1,11 +1,16 @@
 import axios from 'axios';
-
+import { store } from '../redux/store.js';
 
 axios.defaults.baseURL = "http://localhost:3000";
 
+export const setAuthHeader = (token) => {
+  if (token) axios.defaults.headers.common.Authorization = `Bearer ${token}`;
+};
+
 
 export const getRecipeDetails = async (recipeId) => {
-
+    const token = store.getState().auth?.token;
+    setAuthHeader(token);
     const res = await axios.get(
         `/api/recipes/${recipeId}`,
     );
@@ -13,6 +18,8 @@ export const getRecipeDetails = async (recipeId) => {
 };
 
 export const getSavedRecipes = async () => {
+    const token = store.getState().auth?.token;
+    setAuthHeader(token);
     const res = await axios.get(
         `/api/recipes/saved-recipes`,
     );
@@ -21,6 +28,8 @@ export const getSavedRecipes = async () => {
 
 
 export const postSavedRecipes = async (recipeId) => {
+    const token = store.getState().auth?.token;
+    setAuthHeader(token);
     const res = await axios.post(
       '/api/recipes/saved-recipes',
       { recipeId }
@@ -30,6 +39,8 @@ export const postSavedRecipes = async (recipeId) => {
 
 
 export const delSavedRecipes = async (recipeId) => {
+    const token = store.getState().auth?.token;
+    setAuthHeader(token);
     const res = await axios.delete(
         `/api/recipes/saved-recipes/${recipeId}`,
     );
@@ -38,6 +49,8 @@ export const delSavedRecipes = async (recipeId) => {
 
 
 export const getAllIngredients = async () => {
+    const token = store.getState().auth?.token;
+    setAuthHeader(token);
     const res = await axios.get(
         `/api/ingredients/`,
     );

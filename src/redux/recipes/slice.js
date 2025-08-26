@@ -13,6 +13,12 @@ const initialState = {
   searchMode: false,
 };
 
+const dedupeById = (arr) => {
+  const m = new Map();
+  for (const x of arr) m.set(x._id, x);
+  return [...m.values()];
+};
+
 const recipesSlice = createSlice({
   name: 'recipes',
   initialState,
@@ -52,15 +58,26 @@ const recipesSlice = createSlice({
         s.page = 1;
       }
     })
-      .addCase(searchRecipes.fulfilled, (s, { payload }) => {
+      // 🔽 изменили сигнатуру, чтобы получить meta
+      .addCase(searchRecipes.fulfilled, (s, { payload, meta }) => {
         s.loading = false;
         s.page = payload.page;
         s.perPage = payload.perPage ?? 12;
         s.totalItems = payload.totalItems ?? payload.total ?? 0;
         s.totalPages = payload.totalPages ?? 0;
 
-        // КЛЮЧЕВОЕ: показываем только текущую страницу (12 шт.)
-        s.items = payload.recipes || [];
+        const isNextPage = (meta?.arg?.page ?? 1) > 1;
+
+        if (isNextPage) {
+          // 👇 ДОБАВЛЯЕМ результаты к уже найденным (инфинити-лента)
+          s.items = dedupeById([
+            ...(s.items || []),
+            ...(payload.recipes || []),
+          ]);
+        } else {
+          // первая страница — просто устанавливаем
+          s.items = payload.recipes || [];
+        }
       })
       .addCase(searchRecipes.rejected, (s, { payload }) => {
         s.loading = false;
