@@ -1,31 +1,27 @@
-// src/components/UserProfile/RecipesList/RecipesList.jsx
 import { useEffect, useRef, useState } from 'react';
 import {
   PAGE_SIZE,
   getOwnRecipes,
   getSavedRecipes,
-} from '../../../api/recipes';
-import RecipeCard from '../RecipeCard/RecipeCard';
-import LoadMoreBtn from '../LoadMoreBtn/LoadMoreBtn';
-import s from './RecipesList.module.css';
+} from '../../../api/recipes.js';
+import UserRecipeCard from '../UserRecipeCard/UserRecipeCard.jsx';
+import LoadMoreBtn from '../LoadMoreBtn/LoadMoreBtn.jsx';
+import s from './UserRecipesList.module.css';
 
-export default function RecipesList({ type }) {
+export default function UserRecipesList({ type }) {
   const [items, setItems] = useState([]);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(false);
   const [err, setErr] = useState('');
-  // тригер для форс-рендера після очищення токена
   const [authVer, bumpAuthVer] = useState(0);
-
-  const token = localStorage.getItem('accessToken') || '';
-  const isPrivate = type === 'own' || type === 'favorites';
-  const hasMore = page < totalPages;
 
   const reqIdRef = useRef(0);
   const abortRef = useRef(null);
 
-  // утиліта: визначаємо саме “прострочений токен”
+  const isPrivate = type === 'own' || type === 'favorites';
+  const hasMore = page < totalPages;
+
   const isTokenExpired = (msg = '') => /access token expired/i.test(msg);
 
   useEffect(() => {
@@ -34,10 +30,12 @@ export default function RecipesList({ type }) {
     setTotalPages(1);
     setErr('');
 
-    if (isPrivate && !token) return; // без токена приватні не вантажимо
+    const token = localStorage.getItem('accessToken') || '';
+    if (isPrivate && !token) return;
+
     void loadPage(1, true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [type, token, authVer]);
+  }, [type, authVer]);
 
   useEffect(() => {
     function onRemoved(e) {
@@ -55,6 +53,7 @@ export default function RecipesList({ type }) {
   }, []);
 
   async function loadPage(nextPage, replace = false) {
+    const token = localStorage.getItem('accessToken') || '';
     if (!nextPage || loading) return;
     if (isPrivate && !token) return;
 
@@ -62,7 +61,6 @@ export default function RecipesList({ type }) {
     setErr('');
     const myReqId = ++reqIdRef.current;
 
-    // скасовуємо попередній запит
     abortRef.current?.abort();
     const ctrl = new AbortController();
     abortRef.current = ctrl;
@@ -83,12 +81,18 @@ export default function RecipesList({ type }) {
               signal: ctrl.signal,
             });
 
-      // якщо за час запиту змінився тип/сторінка — ігноруємо відповідь
       if (reqIdRef.current !== myReqId) return;
 
-      // дедуп по id/_id
+      const list = Array.isArray(res.items)
+        ? res.items
+        : Array.isArray(res.data)
+        ? res.data
+        : Array.isArray(res.recipes)
+        ? res.recipes
+        : [];
+
       setItems((prev) => {
-        const merged = replace ? res.items : [...prev, ...res.items];
+        const merged = replace ? list : [...prev, ...list];
         const seen = new Set();
         return merged.filter((it) => {
           const key = String(it?.id ?? it?._id ?? '');
@@ -98,27 +102,26 @@ export default function RecipesList({ type }) {
         });
       });
 
-      setPage(nextPage);
-      setTotalPages(
+      const tp =
         typeof res.totalPages === 'number' && res.totalPages > 0
           ? res.totalPages
           : Math.max(
               1,
               Math.ceil(
-                (replace
-                  ? res.items?.length || 0
-                  : items.length + (res.items?.length || 0)) / PAGE_SIZE,
+                (replace ? list.length : items.length + list.length) /
+                  PAGE_SIZE,
               ),
-            ),
-      );
+            );
+
+      setPage(nextPage);
+      setTotalPages(tp);
     } catch (e) {
-      // якщо токен прострочився — робимо “автовихід” і не показуємо помилку
       const msg = e?.message || '';
       if (isTokenExpired(msg) || e?.status === 401) {
         localStorage.removeItem('accessToken');
         setItems([]);
-        setErr(''); // не показуємо “Access token expired”
-        bumpAuthVer((v) => v + 1); // форс-рендер, щоб зчитати свіжий токен ('')
+        setErr('');
+        bumpAuthVer((v) => v + 1);
       } else if (e?.name !== 'AbortError') {
         setErr(msg || 'Failed to load');
       }
@@ -132,32 +135,41 @@ export default function RecipesList({ type }) {
 
   return (
     <>
-      {/* Показуємо інші помилки, але не “Access token expired” */}
       {err && !/access token expired/i.test(err) && (
         <div className={s.error}>⚠ {err}</div>
       )}
 
-      <div className={s.grid}>
-        {items.map((it) => (
-          <RecipeCard
-            key={String(it.id ?? it._id)}
-            item={it}
-            mode={type === 'own' ? 'own' : 'favorites'}
-            onRemoved={(id) =>
-              setItems((prev) =>
-                prev.filter((x) => String(x.id ?? x._id) !== String(id)),
-              )
-            }
-          />
-        ))}
-
-        {loading &&
-          Array.from({ length: PAGE_SIZE }).map((_, i) => (
-            <div key={`sk-${i}`} className={`${s.card} ${s.skeleton}`} />
+      <div className={s.recipe_container}>
+        <ul className={s.recipe_list}>
+          {items.map((it) => (
+            <li className={s.recipe_item} key={String(it.id ?? it._id)}>
+              <UserRecipeCard
+                item={it}
+                mode={type === 'own' ? 'own' : 'favorites'}
+                onRemoved={(id) =>
+                  setItems((prev) =>
+                    prev.filter((x) => String(x.id ?? x._id) !== String(id)),
+                  )
+                }
+              />
+            </li>
           ))}
+
+          {loading &&
+            Array.from({ length: PAGE_SIZE }).map((_, i) => (
+              <li key={`sk-${i}`} className={s.recipe_item}>
+                <div className={s.skCard}>
+                  <div className={s.skThumb} />
+                  <div className={s.skLine} />
+                  <div className={s.skLineSm} />
+                  <div className={s.skLineSm} />
+                </div>
+              </li>
+            ))}
+        </ul>
       </div>
 
-      {!token && isPrivate ? (
+      {!localStorage.getItem('accessToken') && isPrivate ? (
         <div className={s.empty}>Please log in to see your recipes.</div>
       ) : (
         !loading &&
@@ -165,13 +177,15 @@ export default function RecipesList({ type }) {
         !err && <div className={s.empty}>No recipes yet.</div>
       )}
 
-      {hasMore && !err && (!!token || !isPrivate) && (
-        <LoadMoreBtn
-          onClick={() => loadPage(page + 1)}
-          disabled={loading}
-          loading={loading}
-        />
-      )}
+      {hasMore &&
+        !err &&
+        (!!localStorage.getItem('accessToken') || !isPrivate) && (
+          <LoadMoreBtn
+            onClick={() => loadPage(page + 1)}
+            disabled={loading}
+            loading={loading}
+          />
+        )}
     </>
   );
 }
