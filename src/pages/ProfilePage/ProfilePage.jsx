@@ -1,8 +1,7 @@
 import { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, Outlet } from 'react-router-dom';
 import { API_BASE } from '../../api/recipes';
 import s from './ProfilePage.module.css';
-import UserRecipesList from '../../components/UserProfile/UserRecipesList/UserRecipesList';
 
 async function safeJson(res) {
   const text = await res.text().catch(() => '');
@@ -14,13 +13,41 @@ async function safeJson(res) {
 }
 
 export default function ProfilePage() {
-  const { recipeType = 'own' } = useParams();
+  const location = useLocation();
   const navigate = useNavigate();
-
-  const type = recipeType === 'favorites' ? 'favorites' : 'own';
-  const tabIsOwn = type === 'own';
+  const tabIsOwn = location.pathname.startsWith('/profile/own');
 
   const [counts, setCounts] = useState({ own: null, saved: null });
+
+  async function fetchCount(kind) {
+    const path =
+      kind === 'own' ? '/api/recipes/own' : '/api/recipes/saved-recipes';
+
+    const url = new URL(`${API_BASE}${path}`);
+    url.searchParams.set('page', '1');
+    if (kind === 'own') {
+      url.searchParams.set('limit', '1');
+    } else {
+      url.searchParams.set('perPage', '1');
+    }
+
+    const token = localStorage.getItem('accessToken') || '';
+    const res = await fetch(url.toString(), {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    const data = await safeJson(res);
+    if (!res.ok) throw new Error(data?.message || 'Failed to load');
+
+    const box = data?.data ?? data;
+    const total =
+      box?.totalPages ??
+      box?.totalItems ??
+      box?.total ??
+      box?.totalCount ??
+      (Array.isArray(box?.items) ? box.items.length : 0);
+
+    return typeof total === 'number' ? total : 0;
+  }
 
   useEffect(() => {
     const token = localStorage.getItem('accessToken') || '';
@@ -28,41 +55,6 @@ export default function ProfilePage() {
       setCounts({ own: null, saved: null });
       return;
     }
-
-    async function fetchCount(kind) {
-      const path =
-        kind === 'own' ? '/api/recipes/own' : '/api/recipes/saved-recipes';
-
-      const url = new URL(`${API_BASE}${path}`);
-      url.searchParams.set('page', '1');
-      url.searchParams.set('perPage', '1');
-
-      const token = localStorage.getItem('accessToken') || '';
-      const res = await fetch(url.toString(), {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-
-      const data = await safeJson(res);
-      if (!res.ok) throw new Error(data?.message || 'Failed to load');
-
-      const box = data?.data ?? data;
-
-      const list =
-        (Array.isArray(box?.items) && box.items) ||
-        (Array.isArray(box?.data) && box.data) ||
-        (Array.isArray(box?.recipes) && box.recipes) ||
-        [];
-
-      const total =
-        box?.totalItems ??
-        box?.total ??
-        box?.totalCount ??
-        box?.totalPages ??
-        list.length;
-
-      return typeof total === 'number' ? total : 0;
-    }
-
     (async () => {
       try {
         const [own, saved] = await Promise.all([
@@ -92,7 +84,7 @@ export default function ProfilePage() {
             role="tab"
             aria-selected={tabIsOwn ? 'true' : 'false'}
             className={`${s.tabBtn} ${tabIsOwn ? s.active : ''}`}
-            onClick={() => navigate('/user-profile/own')}
+            onClick={() => navigate('/profile/own')}
             type="button"
           >
             My Recipes
@@ -102,16 +94,16 @@ export default function ProfilePage() {
             role="tab"
             aria-selected={!tabIsOwn ? 'true' : 'false'}
             className={`${s.tabBtn} ${!tabIsOwn ? s.active : ''}`}
-            onClick={() => navigate('/user-profile/favorites')}
+            onClick={() => navigate('/profile/favorites')}
             type="button"
           >
             Saved Recipes
           </button>
         </nav>
+
         <div className={s.countLine}>{countText}</div>
       </header>
-
-      <UserRecipesList type={type} />
+      <Outlet />
     </section>
   );
 }

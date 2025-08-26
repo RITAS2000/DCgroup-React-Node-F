@@ -16,12 +16,11 @@ export default function UserRecipesList({ type }) {
   const [err, setErr] = useState('');
   const [authVer, bumpAuthVer] = useState(0);
 
-  const token = localStorage.getItem('accessToken') || '';
-  const isPrivate = type === 'own' || type === 'favorites';
-  const hasMore = page < totalPages;
-
   const reqIdRef = useRef(0);
   const abortRef = useRef(null);
+
+  const isPrivate = type === 'own' || type === 'favorites';
+  const hasMore = page < totalPages;
 
   const isTokenExpired = (msg = '') => /access token expired/i.test(msg);
 
@@ -31,10 +30,12 @@ export default function UserRecipesList({ type }) {
     setTotalPages(1);
     setErr('');
 
+    const token = localStorage.getItem('accessToken') || '';
     if (isPrivate && !token) return;
+
     void loadPage(1, true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [type, token, authVer]);
+  }, [type, authVer]);
 
   useEffect(() => {
     function onRemoved(e) {
@@ -52,6 +53,7 @@ export default function UserRecipesList({ type }) {
   }, []);
 
   async function loadPage(nextPage, replace = false) {
+    const token = localStorage.getItem('accessToken') || '';
     if (!nextPage || loading) return;
     if (isPrivate && !token) return;
 
@@ -81,8 +83,16 @@ export default function UserRecipesList({ type }) {
 
       if (reqIdRef.current !== myReqId) return;
 
+      const list = Array.isArray(res.items)
+        ? res.items
+        : Array.isArray(res.data)
+        ? res.data
+        : Array.isArray(res.recipes)
+        ? res.recipes
+        : [];
+
       setItems((prev) => {
-        const merged = replace ? res.items : [...prev, ...res.items];
+        const merged = replace ? list : [...prev, ...list];
         const seen = new Set();
         return merged.filter((it) => {
           const key = String(it?.id ?? it?._id ?? '');
@@ -92,19 +102,19 @@ export default function UserRecipesList({ type }) {
         });
       });
 
-      setPage(nextPage);
-      setTotalPages(
+      const tp =
         typeof res.totalPages === 'number' && res.totalPages > 0
           ? res.totalPages
           : Math.max(
               1,
               Math.ceil(
-                (replace
-                  ? res.items?.length || 0
-                  : items.length + (res.items?.length || 0)) / PAGE_SIZE,
+                (replace ? list.length : items.length + list.length) /
+                  PAGE_SIZE,
               ),
-            ),
-      );
+            );
+
+      setPage(nextPage);
+      setTotalPages(tp);
     } catch (e) {
       const msg = e?.message || '';
       if (isTokenExpired(msg) || e?.status === 401) {
@@ -154,7 +164,7 @@ export default function UserRecipesList({ type }) {
           ))}
       </div>
 
-      {!token && isPrivate ? (
+      {!localStorage.getItem('accessToken') && isPrivate ? (
         <div className={s.empty}>Please log in to see your recipes.</div>
       ) : (
         !loading &&
@@ -162,13 +172,15 @@ export default function UserRecipesList({ type }) {
         !err && <div className={s.empty}>No recipes yet.</div>
       )}
 
-      {hasMore && !err && (!!token || !isPrivate) && (
-        <LoadMoreBtn
-          onClick={() => loadPage(page + 1)}
-          disabled={loading}
-          loading={loading}
-        />
-      )}
+      {hasMore &&
+        !err &&
+        (!!localStorage.getItem('accessToken') || !isPrivate) && (
+          <LoadMoreBtn
+            onClick={() => loadPage(page + 1)}
+            disabled={loading}
+            loading={loading}
+          />
+        )}
     </>
   );
 }
