@@ -18,7 +18,6 @@ const ProfilePage = lazy(() =>
 const NotFoundPage = lazy(() =>
   import('../../pages/NotFoundPage/NotFoundPage.jsx'),
 );
-
 const RecipeViewPage = lazy(() =>
   import('../../pages/RecipeViewPage/RecipeViewPage.jsx'),
 );
@@ -29,6 +28,7 @@ export default function App() {
       <Suspense fallback={null}>
         <Routes>
           <Route path="/" element={<MainPage />} />
+
           <Route
             path="/recipes/:recipeId"
             element={
@@ -37,13 +37,15 @@ export default function App() {
                 component={<RecipeViewPage />}
               />
             }
-          ></Route>
+          />
+
           <Route
             path="/recipes/*"
             element={
               <PrivateRoute redirectTo="/auth/login" component={<NotFound />} />
             }
-          ></Route>
+          />
+
           <Route
             path="/add-recipe"
             element={
@@ -53,6 +55,7 @@ export default function App() {
               />
             }
           />
+
           <Route
             path="/profile/:recipeType"
             element={
@@ -62,6 +65,7 @@ export default function App() {
               />
             }
           />
+
           <Route
             path="/auth/:authType"
             element={
@@ -72,6 +76,7 @@ export default function App() {
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </Suspense>
+
       <ToastContainer
         position="bottom-center"
         autoClose={2500}

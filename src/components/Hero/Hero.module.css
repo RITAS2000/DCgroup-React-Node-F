@@ -1,16 +1,15 @@
 .hero {
   padding: 128px 16px;
+  background: linear-gradient(to left, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.9)),
+    url('../../images/Hero-mobil.jpg');
+  background-repeat: no-repeat;
   background-position: center;
   background-size: cover;
-  position: relative;
 }
+
 .hero .overlay {
-  background: linear-gradient(135deg, #000 0%, #000 90%);
-  position: absolute;
-  inset: 0;
-  opacity: 0.5;
-  z-index: 1;
 }
+
 .hero .content {
   display: flex;
   align-items: flex-start;
@@ -26,4 +25,22 @@
   font-weight: 600;
   font-size: 40px;
   color: #fff;
+}
+
+@media screen and (min-width: 768px) {
+  .hero {
+    background: linear-gradient(to left, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.9)),
+      url('../../images/Hero-tablet.jpg');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+  }
+  .hero .content .title {
+    font-size: 48px;
+    line-height: 1.1;
+    max-width: 493px;
+  }
+}
+
+@media screen and (min-width: 1440px) {
 }
