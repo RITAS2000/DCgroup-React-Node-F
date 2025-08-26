@@ -7,6 +7,7 @@ import RecipeDetails from '../RecipeDetails/RecipeDetails.jsx';
 import LoginForm from '../LoginForm/LoginForm.jsx';
 import RegistrationForm from '../RegistrationForm/RegistrationForm.jsx';
 import RecipesList from '../RecipesList/RecipesList.jsx';
+import UserRecipesList from '../UserProfile/UserRecipesList/UserRecipesList.jsx';
 
 const MainPage = lazy(() => import('../../pages/MainPage/MainPage.jsx'));
 const AuthPage = lazy(() => import('../../pages/AuthPage/AuthPage.jsx'));
@@ -36,10 +37,10 @@ export default function App() {
           <Route path="/add-recipe" element={<AddRecipePage />} />
 
           <Route path="/profile" element={<ProfilePage />}>
-            <Route path="own" element={<RecipesList type="own" />} />
+            <Route path="own" element={<UserRecipesList type="own" />} />
             <Route
               path="favorites"
-              element={<RecipesList type="favorites" />}
+              element={<UserRecipesList type="favorites" />}
             />
           </Route>
 

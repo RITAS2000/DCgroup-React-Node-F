@@ -1,78 +1,81 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useLocation, useNavigate, Outlet } from 'react-router-dom';
-import { API_BASE } from '../../api/recipes';
 import s from './ProfilePage.module.css';
-
-async function safeJson(res) {
-  const text = await res.text().catch(() => '');
-  try {
-    return text ? JSON.parse(text) : {};
-  } catch {
-    return { _raw: text };
-  }
-}
+import { getOwnRecipes, getSavedRecipes } from '../../api/recipes';
 
 export default function ProfilePage() {
   const location = useLocation();
   const navigate = useNavigate();
+
   const tabIsOwn = location.pathname.startsWith('/profile/own');
 
+  const [token, setToken] = useState(
+    () => localStorage.getItem('accessToken') || '',
+  );
   const [counts, setCounts] = useState({ own: null, saved: null });
 
-  async function fetchCount(kind) {
-    const path =
-      kind === 'own' ? '/api/recipes/own' : '/api/recipes/saved-recipes';
-
-    const url = new URL(`${API_BASE}${path}`);
-    url.searchParams.set('page', '1');
-    if (kind === 'own') {
-      url.searchParams.set('limit', '1');
-    } else {
-      url.searchParams.set('perPage', '1');
+  useEffect(() => {
+    function onStorage(e) {
+      if (e.key === 'accessToken') {
+        setToken(e.newValue || '');
+      }
     }
-
-    const token = localStorage.getItem('accessToken') || '';
-    const res = await fetch(url.toString(), {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    const data = await safeJson(res);
-    if (!res.ok) throw new Error(data?.message || 'Failed to load');
-
-    const box = data?.data ?? data;
-    const total =
-      box?.totalPages ??
-      box?.totalItems ??
-      box?.total ??
-      box?.totalCount ??
-      (Array.isArray(box?.items) ? box.items.length : 0);
-
-    return typeof total === 'number' ? total : 0;
-  }
+    window.addEventListener('storage', onStorage);
+    return () => window.removeEventListener('storage', onStorage);
+  }, []);
 
   useEffect(() => {
-    const token = localStorage.getItem('accessToken') || '';
     if (!token) {
       setCounts({ own: null, saved: null });
       return;
     }
+
+    const fetchCount = async (kind) => {
+      const box =
+        kind === 'own'
+          ? await getOwnRecipes({ page: 1, limit: 1, token })
+          : await getSavedRecipes({ page: 1, perPage: 1, token });
+
+      const total =
+        box?.totalItems ??
+        box?.total ??
+        box?.totalCount ??
+        box?.totalPages ??
+        (Array.isArray(box?.items) ? box.items.length : 0);
+
+      return typeof total === 'number' ? total : 0;
+    };
+
     (async () => {
       try {
         const [own, saved] = await Promise.all([
-          fetchCount('own').catch(() => null),
-          fetchCount('saved').catch(() => null),
+          fetchCount('own'),
+          fetchCount('saved'),
         ]);
         setCounts({ own, saved });
-      } catch {
+      } catch (e) {
+        if (
+          e?.status === 401 ||
+          /access token expired/i.test(e?.message || '')
+        ) {
+          localStorage.removeItem('accessToken');
+          setToken('');
+        }
         setCounts({ own: null, saved: null });
       }
     })();
-  }, []);
+  }, [token]);
 
-  const activeCount = tabIsOwn ? counts.own : counts.saved;
-  const countText =
-    activeCount == null
-      ? '…'
-      : `${activeCount} recipe${activeCount === 1 ? '' : 's'}`;
+  const activeCount = useMemo(
+    () => (tabIsOwn ? counts.own : counts.saved),
+    [tabIsOwn, counts],
+  );
+
+  const countText = useMemo(() => {
+    if (!token) return null;
+    if (activeCount == null) return '…';
+    return `${activeCount} recipe${activeCount === 1 ? '' : 's'}`;
+  }, [token, activeCount]);
 
   return (
     <section className={s.wrap}>
@@ -89,7 +92,6 @@ export default function ProfilePage() {
           >
             My Recipes
           </button>
-
           <button
             role="tab"
             aria-selected={!tabIsOwn ? 'true' : 'false'}
@@ -101,8 +103,9 @@ export default function ProfilePage() {
           </button>
         </nav>
 
-        <div className={s.countLine}>{countText}</div>
+        {countText && <div className={s.countLine}>{countText}</div>}
       </header>
+
       <Outlet />
     </section>
   );

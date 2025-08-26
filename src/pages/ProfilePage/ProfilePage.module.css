@@ -1,34 +1,31 @@
-/* ---------- Profile Page layout ---------- */
 .wrap {
-  padding: 16px 16px 80px;
+  padding: 48px 16px;
   max-width: 1200px;
   margin: 0 auto;
 }
 
 .header {
   display: grid;
-  gap: 12px;
-  align-items: end;
-  margin-bottom: 16px;
+  gap: 16px;
 }
 
 .h1 {
-  font-size: 22px;
-  line-height: 1.2;
-  font-weight: 700;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 40px;
+  font-weight: 600;
+  color: #000;
 }
 
-/* ---------- Tabs (underline only on hover/focus/active) ---------- */
 .tabs {
   display: flex;
-  gap: 32px;
+  gap: 38px;
 }
 
 .tabBtn {
   border: 0;
   background: transparent;
-  padding: 8px 0;
-  font-weight: 700;
+  padding-bottom: 4px;
+  font-weight: 600;
   font-size: 18px;
   cursor: pointer;
   position: relative;
@@ -63,8 +60,9 @@
 }
 
 .countLine {
-  margin-top: 16px;
-  font-size: 16px;
-  font-weight: 700;
-  color: #1c1c1c;
+  font-family: 'Montserrat', sans-serif;
+  margin-bottom: 16px;
+  font-size: 18px;
+  font-weight: 600;
+  color: #000;
 }

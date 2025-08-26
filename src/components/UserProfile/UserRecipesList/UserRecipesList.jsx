@@ -141,16 +141,17 @@ export default function UserRecipesList({ type }) {
 
       <div className={s.grid}>
         {items.map((it) => (
-          <UserRecipeCard
-            key={String(it.id ?? it._id)}
-            item={it}
-            mode={type === 'own' ? 'own' : 'favorites'}
-            onRemoved={(id) =>
-              setItems((prev) =>
-                prev.filter((x) => String(x.id ?? x._id) !== String(id)),
-              )
-            }
-          />
+          <div key={String(it.id ?? it._id)} className={s.item}>
+            <UserRecipeCard
+              item={it}
+              mode={type === 'own' ? 'own' : 'favorites'}
+              onRemoved={(id) =>
+                setItems((prev) =>
+                  prev.filter((x) => String(x.id ?? x._id) !== String(id)),
+                )
+              }
+            />
+          </div>
         ))}
 
         {loading &&

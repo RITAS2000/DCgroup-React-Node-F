@@ -1,67 +1,37 @@
-/* ===== Layout ===== */
-.wrap {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 16px 16px 80px;
-}
-
-.header {
-  display: grid;
-  align-items: end;
-  gap: 12px;
-  margin-bottom: 16px;
-}
-
-.h1 {
-  font-size: 22px;
-  line-height: 1.2;
-  font-weight: 800;
-}
-
-/* ===== Tabs (підкреслення лише hover/focus/active) ===== */
-.tabs {
-  display: flex;
-  gap: 32px;
-}
-
-.tabBtn {
-  position: relative;
-  background: transparent;
-  border: 0;
-  padding: 8px 0;
-  font-size: 18px;
-  font-weight: 700;
-  color: #000;
-  cursor: pointer;
-}
-
-.tabBtn::after {
-  content: '';
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: -2px;
-  height: 2px;
-  background: #000;
-  transform: scaleX(0);
-  transform-origin: center;
-  transition: transform 0.2s ease;
-}
-
-.tabBtn:hover::after,
-.tabBtn:focus-visible::after,
-.tabBtn.active::after {
-  transform: scaleX(1);
-}
-
-/* ===== Grid ===== */
+/* Контейнер для списку */
 .grid {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 16px;
+  gap: 24px;
+  margin-bottom: 24px;
+  width: 100%;
 }
 
-/* ===== Empty/Error ===== */
+.item {
+  height: 100%; /* кожна li/картка тягнеться */
+}
+
+@media (min-width: 768px) {
+  .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .item {
+    max-width: 339px; /* як у макеті */
+  }
+}
+
+@media (min-width: 1440px) {
+  .grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .item {
+    max-width: 288px; /* як у макеті */
+  }
+}
+
+/* Повідомлення */
 .empty,
 .error {
   margin: 24px 0;
@@ -70,28 +40,7 @@
   font-size: 16px;
 }
 
-/* ===== Load more ===== */
-.actions {
-  display: flex;
-  justify-content: center;
-  margin-top: 20px;
-}
-
-.loadMore {
-  border: 0;
-  background: #cf9e6b;
-  color: #fff;
-  font-weight: 800;
-  padding: 12px 18px;
-  border-radius: 12px;
-  cursor: pointer;
-}
-.loadMore:disabled {
-  opacity: 0.6;
-  cursor: default;
-}
-
-/* ===== Skeletons (для місця під картки) ===== */
+/* Скелетон */
 .skCard {
   position: relative;
   border-radius: 16px;
@@ -111,6 +60,7 @@
   border-radius: 6px;
   margin: 8px 0;
 }
+
 .skLineSm {
   height: 12px;
   width: 70%;
@@ -131,36 +81,5 @@
   }
   100% {
     background-position: 0% 50%;
-  }
-}
-
-/* ===== Breakpoints (mobile-first) ===== */
-@media (min-width: 480px) {
-  .wrap {
-    padding: 20px 20px 96px;
-  }
-  .grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 18px;
-  }
-}
-
-@media (min-width: 768px) {
-  .wrap {
-    padding: 24px 24px 104px;
-  }
-  .grid {
-    grid-template-columns: repeat(3, 1fr);
-    gap: 20px;
-  }
-  .h1 {
-    font-size: 26px;
-  }
-}
-
-@media (min-width: 1024px) {
-  .grid {
-    grid-template-columns: repeat(4, 1fr);
-    gap: 22px;
   }
 }
