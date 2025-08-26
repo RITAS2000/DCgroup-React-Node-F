@@ -11,7 +11,10 @@ export default function Layout({ children }) {
   return (
     <div className={css.page}>
       <Header />
+
       <ModalContainer />
+
+
       <div className={css['outlet-container']}>
         <Suspense
           fallback={

@@ -3,15 +3,18 @@ import { Formik, Field, Form } from 'formik';
 import * as Yup from 'yup';
 import { useDispatch } from 'react-redux';
 import { searchRecipes } from '../../redux/recipes/operations';
-import { toast } from 'react-hot-toast';
+import { toast } from 'react-toastify';
+import { setQuery, clearResults } from '../../redux/recipes/slice'; // 🟢 додав clearResults
 
 const Schema = Yup.object({
-  q: Yup.string().trim().min(2, 'мінімум 2 символи').required('Required'),
+  q: Yup.string()
+    .trim()
+    .min(2, 'мінімум 2 символи')
+    .required('Еnter more than 2 letters'),
 });
 
 export default function SearchBox() {
   const dispatch = useDispatch();
-
   const initValues = { q: '' };
 
   const onSubmit = async (values, actions) => {
@@ -21,17 +24,22 @@ export default function SearchBox() {
         actions.setSubmitting(false);
         return;
       }
+      dispatch(setQuery({ title: q, category: '', ingredient: '' }));
 
       const res = await dispatch(searchRecipes({ title: q, page: 1 })).unwrap();
-
       if (!res.recipes || res.recipes.length === 0) {
-        toast('Not found');
+        toast.info('Nothing found');
       }
     } catch (e) {
-      toast.error(e);
+      toast.error(String(e));
     } finally {
       actions.setSubmitting(false);
     }
+  };
+
+  // 🟢 метод для скидання пошуку (буде передаватись у NoResultSearch)
+  const handleReset = () => {
+    dispatch(clearResults());
   };
 
   return (

@@ -14,7 +14,9 @@ export default function FooterLink() {
   const handleAccountClick = (e) => {
     if (!isLoggedIn) {
       e.preventDefault();
+
       dispatch(openModal({type: 'notAuthorized'}));
+
     }
   };
 
