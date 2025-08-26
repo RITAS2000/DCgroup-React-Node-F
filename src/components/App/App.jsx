@@ -29,15 +29,7 @@ export default function App() {
       <Suspense fallback={null}>
         <Routes>
           <Route path="/" element={<MainPage />} />
-          <Route
-            path="/recipes/:recipeId"
-            element={
-              <PrivateRoute
-                redirectTo="/auth/login"
-                component={<RecipeViewPage />}
-              />
-            }
-          ></Route>
+          <Route path="/recipes/:recipeId" element={<RecipeViewPage />}></Route>
           <Route
             path="/recipes/*"
             element={
