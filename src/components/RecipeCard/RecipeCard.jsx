@@ -1,19 +1,28 @@
+import { useNavigate } from 'react-router-dom';
 import css from './RecipeCard.module.css';
 
 export default function RecipeCard({
+  id,
   thumb,
   title,
   time,
   description,
   calories,
 }) {
+  const navigate = useNavigate();
+  const handleLearnMore = () => {
+    navigate(`/recipes/${id}`);
+  };
   return (
     <div className={css.card}>
       <img className={css.image} src={thumb} alt={title} />
       <div className={css.title_container}>
         <h3 className={css.title}>{title}</h3>
         <div className={css.time_container}>
-          <svg
+          <svg width="24" height="24">
+            <use xlinkHref="../../../public/sprite/symbol-defs.svg#icon-clock"></use>
+          </svg>
+          {/* <svg
             width="24"
             height="24"
             viewBox="0 0 24 24"
@@ -27,7 +36,7 @@ export default function RecipeCard({
               strokeLinecap="round"
               strokeLinejoin="round"
             />
-          </svg>
+          </svg> */}
           <p className={css.time}>{time}</p>
         </div>
       </div>
@@ -36,9 +45,14 @@ export default function RecipeCard({
         <p className={css.description2}>~{calories ?? 'N/A'} cals</p>
       </div>
       <div className={css.btn_cont}>
-        <button className={css.btn_learn}>Learn more</button>
+        <button className={css.btn_learn} onClick={handleLearnMore}>
+          Learn more
+        </button>
         <button className={css.btn_save}>
-          <svg
+          <svg width="24" height="24">
+            <use xlinkHref="../../../public/sprite/symbol-defs.svg#icon-bookmark-outline"></use>
+          </svg>
+          {/* <svg
             width="24"
             height="24"
             viewBox="0 0 24 24"
@@ -51,7 +65,7 @@ export default function RecipeCard({
               strokeLinecap="round"
               strokeLinejoin="round"
             />
-          </svg>
+          </svg> */}
         </button>
       </div>
     </div>

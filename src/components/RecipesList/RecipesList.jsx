@@ -171,6 +171,7 @@ export default function RecipesList() {
                 ref={isLastNew ? lastCardRef : null}
               >
                 <RecipeCard
+                  id={_id}
                   thumb={thumb}
                   title={title}
                   time={time}
