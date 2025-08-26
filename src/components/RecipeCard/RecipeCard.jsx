@@ -1,5 +1,10 @@
 import { useNavigate } from 'react-router-dom';
 import css from './RecipeCard.module.css';
+import { useDispatch, useSelector } from 'react-redux';
+import { selectIsLoggedIn } from '../../redux/auth/selectors.js';
+import { selectIsModalOpen } from '../../redux/modal/selectors.js';
+import { openModal } from '../../redux/modal/slice.js';
+import ModalNotAuthorized from '../ModalNotAuthorized/ModalNotAuthorized.jsx';
 
 export default function RecipeCard({
   id,
@@ -10,9 +15,22 @@ export default function RecipeCard({
   calories,
 }) {
   const navigate = useNavigate();
+
   const handleLearnMore = () => {
     navigate(`/recipes/${id}`);
   };
+
+  const isLoggedIn = useSelector(selectIsLoggedIn);
+  const isModalOpen = useSelector(selectIsModalOpen);
+  const dispatch = useDispatch();
+
+  const handleAddToSavedRecipes = (e) => {
+    if (!isLoggedIn) {
+      e.preventDefault();
+      dispatch(openModal({ type: 'push' }));
+    }
+  };
+
   return (
     <div className={css.card}>
       <img className={css.image} src={thumb} alt={title} />
@@ -48,7 +66,7 @@ export default function RecipeCard({
         <button className={css.btn_learn} onClick={handleLearnMore}>
           Learn more
         </button>
-        <button className={css.btn_save}>
+        <button className={css.btn_save} onClick={handleAddToSavedRecipes}>
           <svg width="24" height="24">
             <use xlinkHref="../../../public/sprite/symbol-defs.svg#icon-bookmark-outline"></use>
           </svg>
@@ -68,6 +86,7 @@ export default function RecipeCard({
           </svg> */}
         </button>
       </div>
+      {isModalOpen && <ModalNotAuthorized />}
     </div>
   );
 }
