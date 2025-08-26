@@ -5,6 +5,9 @@ import axios from 'axios';
 import LoadMoreBtn from '../LoadMoreBtn/LoadMoreBtn.jsx';
 import RecipeCard from '../RecipeCard/RecipeCard.jsx';
 import css from './RecipesList.module.css';
+import NoResultSearch from '../NoResultSearch/NoResultSearch.jsx'; // 🟢 додав
+import { clearResults } from '../../redux/recipes/slice.js'; // 🟢 додав
+
 import {
   selectRecipes,
   selectRecipesLoading,
@@ -39,6 +42,10 @@ export default function RecipesList() {
   const [loadingFeed, setLoadingFeed] = useState(false);
   const lastCardRef = useRef(null);
   const scrollAfterLoad = useRef(false);
+
+  // --- для плавного скролла в режиме поиска ---
+  const endSearchRef = useRef(null); // якорь внизу списка поиска
+  const pendingScroll = useRef(false); // флаг, что ждём прокрутку после догрузки
 
   const fetchRecipes = async (pageNum) => {
     try {
@@ -84,6 +91,17 @@ export default function RecipesList() {
     }
   }, [recipes]);
 
+  // после догрузки результатов ПОИСКА — плавно прокручиваем к низу списка
+  useEffect(() => {
+    if (searchMode && pendingScroll.current && endSearchRef.current) {
+      endSearchRef.current.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start',
+      });
+      pendingScroll.current = false;
+    }
+  }, [searched.length, searchMode]);
+
   // ===== РЕЖИМ ПОИСКА =====
   if (searchMode) {
     if (searching) return <div className={css.recipe_container}>Loading…</div>;
@@ -94,8 +112,16 @@ export default function RecipesList() {
         </div>
       );
     }
-    if (!searched.length)
-      return <div className={css.recipe_container}>Nothing found</div>;
+    if (!searched.length) {
+      return (
+        <NoResultSearch
+          query={query.title || ''} // 🟢 показуємо, що шукав користувач
+          totalResults={0}
+          onReset={() => dispatch(clearResults())} // 🟢 очищаємо Redux
+        />
+      );
+    }
+    // return <div className={css.recipe_container}>Nothing found</div>;
 
     const canLoadMore = searchPage < totalPages;
 
@@ -115,10 +141,14 @@ export default function RecipesList() {
           ))}
         </ul>
 
+        {/* якорь для плавного скролла после догрузки */}
+        <div ref={endSearchRef} />
+
         {canLoadMore && !searching && (
           <LoadMoreBtn
             onClick={() => {
-              window.scrollTo({ top: 0, behavior: 'smooth' });
+              // НЕ скроллим вверх; просто запоминаем, что после догрузки нужно прокрутить вниз
+              pendingScroll.current = true;
               dispatch(searchRecipes({ ...query, page: searchPage + 1 }));
             }}
           />
