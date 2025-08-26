@@ -23,7 +23,7 @@
 .text {
     font-family: "Montserrat", sans-serif;
     font-weight: 400;
-    font-size: 16px;
+    font-size: 13px;
     line-height: 1.55;
     text-align: center;
     color: #000;
@@ -39,6 +39,7 @@
     height: 391px;
 }
 .label {
+    position: relative;
     display: flex;
     align-items: flex-start;
     justify-content: flex-start;
@@ -57,13 +58,33 @@
     padding: 8px;
     width: 298px;
     height: 41px;
+    transition: background-color 0.8s ease;
 }
-.input:focus {
+.input:focus,
+.input:hover {
   border: 1.5px solid #9b6c43;
+  box-shadow: 0 0 0 4px rgba(78, 70, 180, 0.2);
+  background: #fff;
 }
 
 .inputError {
   border: 1.5px solid #c80000;
+}
+
+
+.input::placeholder {
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 1.55;
+    color: #9f9f9f;
+    transition: background-color 0.8s ease;
+}
+.inputError::placeholder {
+    color: #c80000;
+}
+
+.input:focus::placeholder {
+    color: #000;
 }
 .button {
     display: block;
@@ -113,6 +134,29 @@ button:active {
     text-decoration: underline;
     text-decoration-skip-ink: none;
     padding-left: 5px;
+}
+.error {
+    position: absolute;
+    color: #c80000;
+    font-size: 14px;
+    bottom: -18px;
+}
+.passWrapper {
+    position: relative;
+    width: 100%;
+}
+
+.toggleBtn {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: #fff;
+    border: none;
+    font-size: 18px;
+    font-size: 20px;
+    color: #000;
+        
 }
 
 
