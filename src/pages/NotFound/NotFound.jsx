@@ -4,7 +4,7 @@ import imgMobil1x from '../../images/NotFound-mobile@1x.jpg';
 import imgMobil2x from '../../images/NotFound-mobile@2x.jpg';
 import imgTabl1x from '../../images/NotFound-desk-tabl@1x.webp';
 import imgTabl2x from '../../images/NotFound-desk-tabl@2x.webp';
-import css from './NotFoundPage.module.css';
+import css from './NotFound.module.css';
 import { GoArrowLeft } from 'react-icons/go';
 
 export default function NotFound() {
