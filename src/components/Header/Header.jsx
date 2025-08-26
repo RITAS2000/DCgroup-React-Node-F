@@ -1,13 +1,15 @@
 import { useDispatch, useSelector } from 'react-redux';
 import AuthNav from '../AuthNav/AuthNav.jsx';
 import Logo from '../Logo/Logo.jsx';
-import Navigation from '../Navigation/Navigation.jsx';
 import UserMenu from '../UserMenu/UserMenu.jsx';
 import css from './Header.module.css';
 import { selectIsLoggedIn } from '../../redux/auth/selectors.js';
 import ModalMobileNav from '../ModalMobileNav/ModalMobileNav.jsx';
 import { openBurger } from '../../redux/modal/burgerSlice.js';
 import { selectBurgerOpen } from '../../redux/modal/selectors.js';
+import RecipesLink from '../RecipesLink/RecipesLink.jsx';
+import MyProfileLink from '../MyProfileLink/MyProfileLink.jsx';
+import AddRecipeLink from '../AddRecipeLink/AddRecipeLink.jsx';
 
 export default function Header() {
   const isLoggedIn = useSelector(selectIsLoggedIn);
@@ -18,9 +20,16 @@ export default function Header() {
     <header className={css.container}>
       <Logo />
       <div className={css.nav}>
-        <Navigation />
-
-        {isLoggedIn ? <UserMenu /> : <AuthNav />}
+        <RecipesLink />
+        {isLoggedIn ? (
+          <>
+            <MyProfileLink />
+            <AddRecipeLink />
+            <UserMenu />
+          </>
+        ) : (
+          <AuthNav />
+        )}
       </div>
 
       <div className={css.burger} onClick={() => dispatch(openBurger())}>
