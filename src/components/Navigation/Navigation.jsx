@@ -5,6 +5,7 @@ import { useSelector } from 'react-redux';
 
 export default function Navigation() {
   const isLoggedIn = useSelector(selectIsLoggedIn);
+  const defaultType = 'all';
 
   return (
     <nav className={css.nav}>
@@ -19,7 +20,7 @@ export default function Navigation() {
       {isLoggedIn && (
         <>
           <NavLink
-            to="/profile"
+            to={`/profile/${defaultType}`}
             className={({ isActive }) =>
               isActive ? `${css.link} ${css.isActive}` : css.link
             }
