@@ -7,6 +7,8 @@ import RecipeDetails from '../RecipeDetails/RecipeDetails.jsx';
 import LoginForm from '../LoginForm/LoginForm.jsx';
 import RegistrationForm from '../RegistrationForm/RegistrationForm.jsx';
 import RecipesList from '../RecipesList/RecipesList.jsx';
+import PrivateRoute from '../PrivateRoute.jsx';
+import RestrictedRoute from '../RestrictedRoute.jsx';
 
 const MainPage = lazy(() => import('../../pages/MainPage/MainPage.jsx'));
 const AuthPage = lazy(() => import('../../pages/AuthPage/AuthPage.jsx'));
@@ -33,17 +35,32 @@ export default function App() {
 
           <Route path="/recipes/:recipeId" element={<RecipeViewPage />}></Route>
 
-          <Route path="/add-recipe" element={<AddRecipePage />} />
+          <Route
+            path="/add-recipe"
+            element={
+              <PrivateRoute
+                redirectTo="/auth/login"
+                component={<AddRecipePage />}
+              />
+            }
+          />
 
-          <Route path="/profile" element={<ProfilePage />}>
-            <Route path="own" element={<RecipesList type="own" />} />
-            <Route
-              path="favorites"
-              element={<RecipesList type="favorites" />}
-            />
-          </Route>
+          <Route
+            path="/profile/:recipeType"
+            element={
+              <PrivateRoute
+                redirectTo="/auth/login"
+                component={<ProfilePage />}
+              />
+            }
+          />
 
-          <Route path="/auth/:authType" element={<AuthPage />} />
+          <Route
+            path="/auth/:authType"
+            element={
+              <RestrictedRoute redirectTo="/" component={<AuthPage />} />
+            }
+          />
 
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
