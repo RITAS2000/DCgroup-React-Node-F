@@ -5,6 +5,9 @@ import axios from 'axios';
 import LoadMoreBtn from '../LoadMoreBtn/LoadMoreBtn.jsx';
 import RecipeCard from '../RecipeCard/RecipeCard.jsx';
 import css from './RecipesList.module.css';
+import NoResultSearch from '../NoResultSearch/NoResultSearch.jsx'; // 🟢 додав
+import { clearResults } from '../../redux/recipes/slice.js'; // 🟢 додав
+
 import {
   selectRecipes,
   selectRecipesLoading,
@@ -109,8 +112,16 @@ export default function RecipesList() {
         </div>
       );
     }
-    if (!searched.length)
-      return <div className={css.recipe_container}>Nothing found</div>;
+    if (!searched.length) {
+      return (
+        <NoResultSearch
+          query={query.title || ''} // 🟢 показуємо, що шукав користувач
+          totalResults={0}
+          onReset={() => dispatch(clearResults())} // 🟢 очищаємо Redux
+        />
+      );
+    }
+    // return <div className={css.recipe_container}>Nothing found</div>;
 
     const canLoadMore = searchPage < totalPages;
 
