@@ -3,17 +3,9 @@ import { Route, Routes, Navigate } from 'react-router-dom';
 import Layout from '../Layout/Layout.jsx';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
-import RecipeDetails from '../RecipeDetails/RecipeDetails.jsx';
-import LoginForm from '../LoginForm/LoginForm.jsx';
-import RegistrationForm from '../RegistrationForm/RegistrationForm.jsx';
-import RecipesList from '../RecipesList/RecipesList.jsx';
-import UserRecipesList from '../UserProfile/UserRecipesList/UserRecipesList.jsx';
-
 import PrivateRoute from '../PrivateRoute.jsx';
 import RestrictedRoute from '../RestrictedRoute.jsx';
 import NotFound from '../../pages/NotFound/NotFound.jsx';
-
 
 const MainPage = lazy(() => import('../../pages/MainPage/MainPage.jsx'));
 const AuthPage = lazy(() => import('../../pages/AuthPage/AuthPage.jsx'));
@@ -26,7 +18,6 @@ const ProfilePage = lazy(() =>
 const NotFoundPage = lazy(() =>
   import('../../pages/NotFoundPage/NotFoundPage.jsx'),
 );
-
 const RecipeViewPage = lazy(() =>
   import('../../pages/RecipeViewPage/RecipeViewPage.jsx'),
 );
@@ -37,6 +28,7 @@ export default function App() {
       <Suspense fallback={null}>
         <Routes>
           <Route path="/" element={<MainPage />} />
+
           <Route
             path="/recipes/:recipeId"
             element={
@@ -45,13 +37,15 @@ export default function App() {
                 component={<RecipeViewPage />}
               />
             }
-          ></Route>
+          />
+
           <Route
             path="/recipes/*"
             element={
               <PrivateRoute redirectTo="/auth/login" component={<NotFound />} />
             }
-          ></Route>
+          />
+
           <Route
             path="/add-recipe"
             element={
@@ -61,6 +55,7 @@ export default function App() {
               />
             }
           />
+
           <Route
             path="/profile/:recipeType"
             element={
@@ -68,14 +63,9 @@ export default function App() {
                 redirectTo="/auth/login"
                 component={<ProfilePage />}
               />
-               <Route path="own" element={<UserRecipesList type="own" />} />
-            <Route
-              path="favorites"
-              element={<UserRecipesList type="favorites" />}
-            />
-                </Route>
             }
           />
+
           <Route
             path="/auth/:authType"
             element={
@@ -86,6 +76,7 @@ export default function App() {
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </Suspense>
+
       <ToastContainer
         position="bottom-center"
         autoClose={2500}
