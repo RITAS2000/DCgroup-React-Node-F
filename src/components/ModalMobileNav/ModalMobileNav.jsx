@@ -1,5 +1,4 @@
 import { useDispatch, useSelector } from 'react-redux';
-import { closeModal } from '../../redux/modal/slice.js';
 import Navigation from '../Navigation/Navigation.jsx';
 import UserMenu from '../UserMenu/UserMenu.jsx';
 import AuthNav from '../AuthNav/AuthNav.jsx';

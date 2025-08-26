@@ -42,6 +42,14 @@
     padding: 8px;
     width: 298px;
     height: 41px;
+    transition: border-color 0.3s ease;
+}
+.input:focus {
+  border: 1.5px solid #9b6c43;
+}
+
+.inputError {
+  border: 1.5px solid #c80000;
 }
 .button {
     border-radius: 8px;
@@ -54,6 +62,30 @@
     font-weight: 600;
     font-size: 16px;
     color: #fff;
+    transition: background-color 0.8s ease;
+}
+.button:hover,
+.button:focus {
+  background: #6d554b;
+  outline: none;
+}
+
+.button:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 6px rgba(78, 70, 180, 0.12), 0 0 0 2px #fff;
+}
+
+.button:active {
+  background: #9b6c43;
+  box-shadow: 0 0 0 6px rgba(78, 70, 180, 0.12), 0 0 0 2px #fff;
+}
+
+
+.button:disabled {
+  background: #9b6c43;
+  opacity: 0.3;
+  cursor: not-allowed;
+  box-shadow: 0 0 0 6px rgba(78, 70, 180, 0.12), 0 0 0 2px #fff;
 }
 .titlehint {
     font-weight: 400;
@@ -67,6 +99,10 @@
     text-decoration: underline;
     text-decoration-skip-ink: none;
     padding-left: 5px;
+}
+.error {
+    position: absolute;
+
 }
 
 @media screen and (min-width: 768px) {
