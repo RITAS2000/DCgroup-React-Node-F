@@ -5,18 +5,17 @@ import ProfileNavigation from '../../components/UserProfile/ProfileNavigation/Pr
 import UserRecipesList from '../../components/UserProfile/UserRecipesList/UserRecipesList.jsx';
 
 export default function ProfilePage() {
-  const { recipeType = 'own' } = useParams();
-  const type = recipeType === 'favorites' ? 'favorites' : 'own';
+  const { recipeType } = useParams();
 
   return (
     <section className={s.wrap}>
       <header className={s.header}>
         <h1 className={s.h1}>My profile</h1>
-        <ProfileNavigation active={type} />
+        <ProfileNavigation active={recipeType} />
       </header>
 
-      {type === 'own' && <UserRecipesList type="own" />}
-      {type === 'favorites' && <UserRecipesList type="favorites" />}
+      {recipeType === 'own' && <UserRecipesList type="own" />}
+      {recipeType === 'favorites' && <UserRecipesList type="favorites" />}
     </section>
   );
 }
