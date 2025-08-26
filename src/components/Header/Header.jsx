@@ -38,7 +38,8 @@ export default function Header() {
         </svg>
       </div>
 
-      {isOpen && <ModalMobileNav />}
+      {/* {isOpen && <ModalMobileNav />} */}
+      <ModalMobileNav isOpen={isOpen} />
     </header>
   );
 }
