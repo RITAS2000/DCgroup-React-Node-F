@@ -4,7 +4,7 @@ import * as Yup from 'yup';
 import { useDispatch } from 'react-redux';
 import { searchRecipes } from '../../redux/recipes/operations';
 import { toast } from 'react-toastify';
-import { setQuery } from '../../redux/recipes/slice';
+import { setQuery, clearResults } from '../../redux/recipes/slice'; // 🟢 додав clearResults
 
 const Schema = Yup.object({
   q: Yup.string().trim().min(2, 'мінімум 2 символи').required('Required'),
@@ -32,6 +32,11 @@ export default function SearchBox() {
     } finally {
       actions.setSubmitting(false);
     }
+  };
+
+  // 🟢 метод для скидання пошуку (буде передаватись у NoResultSearch)
+  const handleReset = () => {
+    dispatch(clearResults());
   };
 
   return (
