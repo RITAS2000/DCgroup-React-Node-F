@@ -4,10 +4,7 @@ import Layout from '../Layout/Layout.jsx';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import RecipeDetails from '../RecipeDetails/RecipeDetails.jsx';
-import LoginForm from '../LoginForm/LoginForm.jsx';
-import RegistrationForm from '../RegistrationForm/RegistrationForm.jsx';
 import RecipesList from '../RecipesList/RecipesList.jsx';
-import ModalRoot from '../ModalRoot/ModalRoot.jsx';
 
 const MainPage = lazy(() => import('../../pages/MainPage/MainPage.jsx'));
 const AuthPage = lazy(() => import('../../pages/AuthPage/AuthPage.jsx'));
@@ -61,8 +58,6 @@ export default function App() {
           theme="colored"
         />
       </Layout>
-
-      <ModalRoot />
     </>
   );
 }

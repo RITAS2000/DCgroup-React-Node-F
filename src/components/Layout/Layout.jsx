@@ -1,9 +1,8 @@
 import Footer from '../Footer/Footer.jsx';
 import Header from '../Header/Header.jsx';
 import css from './Layout.module.css';
-import ModalNotAuthorized from '../ModalNotAuthorized/ModalNotAuthorized.jsx';
+import ModalContainer from '../ModalContainer/ModalContainer.jsx'
 import { Suspense, lazy } from 'react';
-// import ReModalContainer from '../ReUseModal/ReModalContainer/ReModalContainer.jsx';
 import { ClockLoader } from 'react-spinners';
 
 const Outlet = lazy(() => import('../Outlet/Outlet.jsx'));
@@ -12,8 +11,7 @@ export default function Layout({ children }) {
   return (
     <div className={css.page}>
       <Header />
-      <ModalNotAuthorized />
-      {/* <ReModalContainer /> */}
+      <ModalContainer />
       <div className={css['outlet-container']}>
         <Suspense
           fallback={

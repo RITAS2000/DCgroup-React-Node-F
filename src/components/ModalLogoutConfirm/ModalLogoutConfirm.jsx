@@ -1,30 +1,20 @@
-import { useDispatch, useSelector} from "react-redux";
-import { closeModal } from "../../redux/modal/slice.js";
-import css from "../../components/ModalLogoutConfirm/ModalLogoutConfirm.module.css"
-import { selectIsModalOpen } from "../../redux/modal/selectors.js";
-import { useNavigate } from "react-router-dom";
-import { useEffect } from "react";
-import { logout } from "../../redux/auth/operations.js";
+import { useDispatch } from 'react-redux';
+import { closeModal } from '../../redux/modal/slice.js';
+import css from './ModalLogoutConfirm.module.css';
+import { useNavigate } from 'react-router-dom';
+import { logout } from '../../redux/auth/operations.js';
+import { useCallback } from 'react';
 
 const ModalLogoutConfirm = () => {
-  const isOpen = useSelector(selectIsModalOpen);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-    useEffect(() => {
-      const onEsc = (event) => event.key === 'Escape' && dispatch(closeModal());
-      if (isOpen) {
-        window.addEventListener('keydown', onEsc);
-      }
-      return () => window.removeEventListener('keydown', onEsc);
-    }, [isOpen, dispatch]);
+  const handleClose = useCallback(() => dispatch(closeModal()), [dispatch]);
   
-    if (!isOpen) return null;
-
-   const handleConfirm = async () => {
+  const handleConfirm = async () => {
     try {
       await dispatch(logout()).unwrap();
-      dispatch(closeModal())
+      dispatch(closeModal());
       navigate('/');
     } catch (e) {
       // показать toast/error при желании
@@ -32,40 +22,19 @@ const ModalLogoutConfirm = () => {
     }
   };
 
-return (
-    <div className={css.backdrop} onClick={() => dispatch(closeModal())}>
-      <div className={css.modal} onClick={(e) => e.stopPropagation()}>
-        <button
-          className={css.closeBtn}
-          onClick={() => dispatch(closeModal())}
-          aria-label="Close"
-        >
-          <svg className={css.icon} width="24" height="24">
-            <use xlinkHref="/sprite/symbol-defs.svg#icon-close" />
-          </svg>
+  return (
+    <>
+      <h2 className={css.title}>Log out</h2>
+      <p className={css.text}>Are you sure you want to log out?</p>
+      <div className={css.action}>
+        <button className={css.logoutBtn} onClick={handleConfirm}>
+          Log out
         </button>
-
-        <h2 className={css.title}>Are you sure?</h2>
-        <p className={css.text}>
-          We will miss you!
-        </p>
-
-        <div className={css.action}>
-          <button
-            className={css.logoutBtn}
-            onClick={() => handleConfirm('/recipes')}
-          >
-            Log out
-          </button>
-          <button
-            className={css.cancelBtn}
-            onClick={() => dispatch(closeModal())}
-          >
-            Cancel
-          </button>
-        </div>
+        <button className={css.cancelBtn} onClick={handleClose}>
+          Cancel
+        </button>
       </div>
-    </div>
+    </>
   );
 };
 
