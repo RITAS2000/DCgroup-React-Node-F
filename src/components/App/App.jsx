@@ -3,17 +3,9 @@ import { Route, Routes, Navigate } from 'react-router-dom';
 import Layout from '../Layout/Layout.jsx';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
-import RecipeDetails from '../RecipeDetails/RecipeDetails.jsx';
-import LoginForm from '../LoginForm/LoginForm.jsx';
-import RegistrationForm from '../RegistrationForm/RegistrationForm.jsx';
-import RecipesList from '../RecipesList/RecipesList.jsx';
-import UserRecipesList from '../UserProfile/UserRecipesList/UserRecipesList.jsx';
-
 import PrivateRoute from '../PrivateRoute.jsx';
 import RestrictedRoute from '../RestrictedRoute.jsx';
 import NotFound from '../../pages/NotFound/NotFound.jsx';
-
 
 const MainPage = lazy(() => import('../../pages/MainPage/MainPage.jsx'));
 const AuthPage = lazy(() => import('../../pages/AuthPage/AuthPage.jsx'));
@@ -68,12 +60,6 @@ export default function App() {
                 redirectTo="/auth/login"
                 component={<ProfilePage />}
               />
-               <Route path="own" element={<UserRecipesList type="own" />} />
-            <Route
-              path="favorites"
-              element={<UserRecipesList type="favorites" />}
-            />
-                </Route>
             }
           />
           <Route
