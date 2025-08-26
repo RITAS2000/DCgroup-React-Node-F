@@ -7,7 +7,10 @@ import { toast } from 'react-toastify';
 import { setQuery, clearResults } from '../../redux/recipes/slice'; // 🟢 додав clearResults
 
 const Schema = Yup.object({
-  q: Yup.string().trim().min(2, 'мінімум 2 символи').required('Required'),
+  q: Yup.string()
+    .trim()
+    .min(2, 'мінімум 2 символи')
+    .required('Еnter more than 2 letters'),
 });
 
 export default function SearchBox() {
