@@ -5,7 +5,7 @@ import { logout } from '../../redux/auth/operations.js';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 
-export default function UserMenu() {
+export default function UserMenu({ onClick }) {
   const dispatch = useDispatch();
   const user = useSelector(selectUser);
   const navigate = useNavigate();
@@ -13,6 +13,7 @@ export default function UserMenu() {
   const handleLogOut = async () => {
     await dispatch(logout());
     navigate('/');
+    if (onClick) onClick();
   };
 
   return (

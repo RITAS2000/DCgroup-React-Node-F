@@ -31,6 +31,8 @@
 @media (min-width: 768px) {
   .nav {
     display: flex;
+    flex-direction: row;
+    align-items: center;
     max-width: 768px;
     gap: 32px;
     font-size: 12px;
