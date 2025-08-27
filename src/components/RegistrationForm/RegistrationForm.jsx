@@ -4,6 +4,10 @@ import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { register } from '../../redux/auth/operations';
 import css from './RegistrationForm.module.css';
 import Container from "../Container/Container";
+import { useState } from 'react';
+import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
+
+
 
 import * as Yup from 'yup';
 
@@ -32,6 +36,9 @@ export default function RegistrationForm() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
+
   const initialValues = {
     name: '',
     email: '',
@@ -48,7 +55,7 @@ export default function RegistrationForm() {
       }),
     );
     if (result.meta.requestStatus === 'fulfilled') {
-      navigate('/auth/login'); // редирект на логин
+      navigate('/auth/login'); 
     }
 
     resetForm();
@@ -60,7 +67,7 @@ export default function RegistrationForm() {
       validationSchema={validationSchema}
       onSubmit={handleSubmit}
     >
-      {({ errors, touched }) => (   // ← вот тут мы достаем ошибки и touched
+      {({ errors, touched, values }) => (   
         <Container variant="white">
           <div className={css.container}>
             <Form className={css.form}>
@@ -69,24 +76,6 @@ export default function RegistrationForm() {
                 Join our community of culinary enthusiasts, save your favorite
                 recipes, and share your cooking creations
               </p>
-
-              <label className={css.label}>
-                <span className={css.labelText}>Enter your email address</span>
-                <Field
-                  name="email"
-                  type="email"
-                  placeholder="email@gmail.com"
-                  className={`${css.input} ${
-                    errors.email && touched.email ? css.inputError : ''
-                  }`}
-                />
-                <ErrorMessage
-                  name="email"
-                  component="div"
-                  className={css.error}
-                />
-              </label>
-
               <label className={css.label}>
                 <span className={css.labelText}>Enter your name</span>
                 <Field
@@ -103,45 +92,75 @@ export default function RegistrationForm() {
                   className={css.error}
                 />
               </label>
-
+              <label className={css.label}>
+                <span className={css.labelText}>Enter your email address</span>
+                <Field
+                  name="email"
+                  type="email"
+                  placeholder="email@gmail.com"
+                   className={`${css.input} ${
+                     values.email && errors.email ? css.inputError : ''
+                    } ${values.email && !errors.email ? css.input : ''}`}
+                />
+                <ErrorMessage
+                  name="email"
+                  component="div"
+                  className={css.error}
+                />
+              </label>
               <label className={css.label}>
                 <span className={css.labelText}>Create a strong password</span>
-                <Field
-                  name="password"
-                  type="password"
-                  placeholder="********"
-                  className={`${css.input} ${
-                    errors.password && touched.password ? css.inputError : ''
-                  }`}
-                />
+                <div className={css.passWrapper}>
+                  <Field
+                    name="password"
+                    type={showPassword ? 'text' : 'password'}
+                    placeholder="********"
+                    className={`${css.input} ${
+                      errors.password && touched.password ? css.inputError : ''
+                      }`}
+                  />
+                  <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className={css.toggleBtn}
+                    >
+                     {showPassword ? <AiOutlineEyeInvisible size={20} /> : <AiOutlineEye size={20} />}
+                    </button>
+                </div>
                 <ErrorMessage
                   name="password"
                   component="div"
                   className={css.error}
                 />
               </label>
-
               <label className={css.label}>
                 <span className={css.labelText}>Repeat your password</span>
-                <Field
-                  name="confirm"
-                  type="password"
-                  placeholder="********"
-                  className={`${css.input} ${
-                    errors.confirm && touched.confirm ? css.inputError : ''
-                  }`}
-                />
+                <div className={css.passWrapper}>
+                  <Field
+                    name="confirm"
+                     type={showConfirm ? 'text' : 'password'} 
+                    placeholder="********"
+                    className={`${css.input} ${
+                      errors.confirm && touched.confirm ? css.inputError : ''
+                    }`}
+                  />
+                   <button
+                      type="button"
+                      onClick={() => setShowConfirm(!showConfirm)}
+                      className={css.toggleBtn}
+                    >
+                      {showConfirm ? <AiOutlineEyeInvisible size={20} /> : <AiOutlineEye size={20} />}   
+                    </button>
+                </div>
                 <ErrorMessage
                   name="confirm"
                   component="div"
                   className={css.error}
                 />
               </label>
-
               <button type="submit" className={css.button}>
                 Create account
               </button>
-
               <div className={css.box}>
                 <p className={css.registerHint}>
                   Already have an account?

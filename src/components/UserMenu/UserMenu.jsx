@@ -1,19 +1,23 @@
 import { useDispatch, useSelector } from 'react-redux';
 import css from './UserMenu.module.css';
 import { selectUser } from '../../redux/auth/selectors.js';
-import { logout } from '../../redux/auth/operations.js';
 import { Link } from 'react-router-dom';
+
+import { openModal } from '../../redux/modal/slice.js';
+
 import { useNavigate } from 'react-router-dom';
+
 
 export default function UserMenu({ onClick }) {
   const dispatch = useDispatch();
   const user = useSelector(selectUser);
   const navigate = useNavigate();
 
-  const handleLogOut = async () => {
-    await dispatch(logout());
-    navigate('/');
-    if (onClick) onClick();
+
+  const handleLogOut = (e) => {
+    e.preventDefault(); 
+    dispatch(openModal({type: 'logoutConfirm'}));
+
   };
 
   return (

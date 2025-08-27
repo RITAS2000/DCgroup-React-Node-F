@@ -46,10 +46,26 @@
 }
 .input:focus {
   border: 1.5px solid #9b6c43;
+  box-shadow: 0 0 0 4px rgba(78, 70, 180, 0.2);
+  background: #fff;
 }
 
 .inputError {
   border: 1.5px solid #c80000;
+}
+.input::placeholder {
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 1.55;
+    color: #9f9f9f;
+    transition: background-color 0.8s ease;
+}
+.inputError::placeholder {
+    color: #c80000;
+}
+
+.input:focus::placeholder {
+    color: #000;
 }
 .button {
     border-radius: 8px;
@@ -102,8 +118,29 @@
 }
 .error {
     position: absolute;
+    color: #c80000;
+    font-size: 14px;
 
 }
+.passWrapper {
+    position: relative;
+    width: 100%;
+}
+
+.toggleBtn {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: #fff;
+    border: none;
+    cursor: pointer;
+    font-size: 20px;
+    color: #000;
+    transition: color 0.2s ease;
+}
+
+
 
 @media screen and (min-width: 768px) {
     .container{

@@ -9,9 +9,9 @@ const setAuthHeader = (token) => {
   axios.defaults.headers.common.Authorization = `Bearer ${token}`;
 };
 
-//const clearAuthHeader = () => {
-//axios.defaults.headers.common.Authorization = "";
-//};
+const clearAuthHeader = () => {
+  delete axios.defaults.headers.common.Authorization;
+};
 
 export const register = createAsyncThunk(
   'auth/register',
@@ -33,7 +33,9 @@ export const login = createAsyncThunk(
     try {
       const res = await axios.post('/api/auth/login', values);
       console.log('Login response:', res);
-      setAuthHeader(res.data.token);
+
+      const token = res.data.token; // 🔹 визначаємо token
+      setAuthHeader(token);
       return res.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.message);
@@ -55,9 +57,28 @@ export const logout = createAsyncThunk('auth/logout', async (_, thunkAPI) => {
         },
       },
     );
-
+    clearAuthHeader();
     return;
   } catch (error) {
     return thunkAPI.rejectWithValue(error.message);
   }
 });
+
+// export const logout = createAsyncThunk('auth/logout', async (_, thunkAPI) => {
+//   const state = thunkAPI.getState();
+//   const token = state.auth.token;
+
+//   try {
+//     await axios.post(
+//       '/api/auth/logout',
+//       {},
+//       { headers: { Authorization: `Bearer ${token}` } },
+//     );
+//   } catch (error) {
+//     console.warn('Logout error:', error.message);
+//   } finally {
+//     // завжди очищаємо токен і стан
+//     localStorage.removeItem('token');
+//     clearAuthHeader();
+//   }
+// });

@@ -29,6 +29,10 @@
   line-height: 0;
   background: none;
   border: none;
+  transition: transform 0.25s ease, color 0.25s ease;
+}
+.closeBtn:hover {
+  transform: scale(1.2);
 }
 .icon {
   display: block;

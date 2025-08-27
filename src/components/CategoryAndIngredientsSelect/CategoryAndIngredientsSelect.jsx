@@ -1,4 +1,4 @@
-import { Field, ErrorMessage } from 'formik';
+import { Field, ErrorMessage, useFormikContext } from 'formik';
 
 import css from './CategoryAndIngredientsSelect.module.css';
 
@@ -8,17 +8,20 @@ const CategoryAndIngredientsSelect = ({
   name,
   id,
 }) => {
+  // const { values } = useFormikContext();
+
   return (
     <>
-      <Field as="select" className={css.calorCategInput} name={name} id={id}>
+      <Field className={css.select} as="select" name={name} id={id}>
         <option value="" disabled hidden>
           {placeholder}
         </option>
-        {categories.map((category) => (
-          <option key={category._id} value={category.name}>
-            {category.name}
-          </option>
-        ))}
+        {Array.isArray(categories) &&
+          categories.map((category) => (
+            <option key={category._id} value={category.name}>
+              {category.name}
+            </option>
+          ))}
       </Field>
       <ErrorMessage className={css.errorMsg} name={name} component="span" />
     </>

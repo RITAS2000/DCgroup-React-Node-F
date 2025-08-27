@@ -10,19 +10,25 @@ import RecipesLink from '../RecipesLink/RecipesLink.jsx';
 import MyProfileLink from '../MyProfileLink/MyProfileLink.jsx';
 import AddRecipeLink from '../AddRecipeLink/AddRecipeLink.jsx';
 
-export default function ModalMobileNav() {
+export default function ModalMobileNav({ isOpen = false }) {
   const dispatch = useDispatch();
   const isLoggedIn = useSelector(selectIsLoggedIn);
 
   const handleClose = () => dispatch(closeBurger());
 
   return (
-    <div className={css.overlay} onClick={handleClose}>
-      <div className={css.menu} onClick={(e) => e.stopPropagation()}>
+    <div
+      className={`${css.overlay} ${isOpen ? css.open : ''}`}
+      onClick={handleClose}
+    >
+      <div
+        className={`${css.menu} ${isOpen ? css.open : ''}`}
+        onClick={(e) => e.stopPropagation()}
+      >
         <Logo />
         <button className={css.close} onClick={handleClose}>
           <svg width="32" height="32">
-            <use href="/sprite/symbol-defs.svg#icon-close" />
+            <use href="/sprite/symbol-defs.svg#icon-close-circle" />
           </svg>
         </button>
 

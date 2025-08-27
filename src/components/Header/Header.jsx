@@ -33,12 +33,12 @@ export default function Header() {
       </div>
 
       <div className={css.burger} onClick={() => dispatch(openBurger())}>
-        <svg width="32" height="32">
+        <svg width="32" height="32" style={{ color: '#fff' }}>
           <use href="/sprite/symbol-defs.svg#icon-burger-menu" />
         </svg>
       </div>
 
-      {isOpen && <ModalMobileNav />}
+      <ModalMobileNav isOpen={isOpen} />
     </header>
   );
 }
