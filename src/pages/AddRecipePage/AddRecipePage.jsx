@@ -6,7 +6,7 @@ import {
   FieldArray,
   useFormikContext,
 } from 'formik';
-import { useId } from 'react';
+import { useId, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import toast from 'react-hot-toast';
 import { useSelector } from 'react-redux';
@@ -21,6 +21,11 @@ import ingredients from './ingredientsTemp.json';
 import IngredientsTable from '../../components/IngredientsTable/IngredientsTable.jsx';
 import { addRecipe } from '../../redux/addRecipe/operations.js';
 import Container from '../../components/Container/Container.jsx';
+
+import { fetchCategories } from '../../redux/categorie/operation.js';
+import { selectCategories } from '../../redux/categorie/selectors.js';
+import { fetchIngredients } from '../../redux/ingredient/operations.js';
+import { selectIngredients } from '../../redux/ingredient/selectors.js';
 
 const useIsTabletOrAbove = () => {
   return useMediaQuery({ query: '(min-width: 768px)' });
@@ -40,6 +45,14 @@ const AddRecipePage = () => {
   const navigate = useNavigate();
 
   const isTabletOrAbove = useIsTabletOrAbove();
+
+  const categories = useSelector(selectCategories);
+  const ingredients = useSelector(selectIngredients);
+
+  useEffect(() => {
+    dispatch(fetchCategories());
+    dispatch(fetchIngredients());
+  }, [dispatch]);
 
   const initialValues = {
     thumb: null,

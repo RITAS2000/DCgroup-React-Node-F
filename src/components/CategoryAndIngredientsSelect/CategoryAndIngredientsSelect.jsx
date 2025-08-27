@@ -8,7 +8,7 @@ const CategoryAndIngredientsSelect = ({
   name,
   id,
 }) => {
-  const { values } = useFormikContext();
+  // const { values } = useFormikContext();
 
   return (
     <>
@@ -16,11 +16,12 @@ const CategoryAndIngredientsSelect = ({
         <option value="" disabled hidden>
           {placeholder}
         </option>
-        {categories.map((category) => (
-          <option key={category._id} value={category.name}>
-            {category.name}
-          </option>
-        ))}
+        {Array.isArray(categories) &&
+          categories.map((category) => (
+            <option key={category._id} value={category.name}>
+              {category.name}
+            </option>
+          ))}
       </Field>
       <ErrorMessage className={css.errorMsg} name={name} component="span" />
     </>
