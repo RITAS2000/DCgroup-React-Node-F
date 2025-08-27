@@ -24,6 +24,7 @@ export default function RecipeCard({
   const isModalOpen = useSelector(selectIsModalOpen);
   const dispatch = useDispatch();
 
+  //бажання зберегти рецепт
   const handleAddToSavedRecipes = (e) => {
     if (!isLoggedIn) {
       e.preventDefault();
