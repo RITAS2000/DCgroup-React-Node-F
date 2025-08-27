@@ -63,6 +63,29 @@
   background-color: transparent;
 }
 
+.resetSearch:focus,
+.resetSearch:hover {
+  background: #6d554b;
+  transition: background-color 0.8s ease;
+  color: #fff;
+  border: 1.5px solid #9b6c43;
+}
+
+.resetSearch:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 6px rgba(78, 70, 180, 0.12), 0 0 0 2px #fff;
+}
+.resetSearch:active {
+  background: #9b6c43;
+  box-shadow: 0 0 0 6px rgba(78, 70, 180, 0.12), 0 0 0 2px #fff;
+}
+.resetSearch:disabled {
+  background: #9b6c43;
+  opacity: 0.3;
+  cursor: not-allowed;
+  box-shadow: 0 0 0 6px rgba(78, 70, 180, 0.12), 0 0 0 2px #fff;
+}
+
 @media (min-width: 768px) {
   .wrapper {
     max-width: 704px;

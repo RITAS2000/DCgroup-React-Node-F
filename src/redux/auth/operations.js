@@ -43,42 +43,42 @@ export const login = createAsyncThunk(
   },
 );
 
-// export const logout = createAsyncThunk('auth/logout', async (_, thunkAPI) => {
-//   try {
-//     const state = thunkAPI.getState();
-//     const token = state.auth.token;
-
-//     await axios.post(
-//       '/api/auth/logout',
-//       {},
-//       {
-//         headers: {
-//           Authorization: `Bearer ${token}`,
-//         },
-//       },
-//     );
-//     clearAuthHeader();
-//     return;
-//   } catch (error) {
-//     return thunkAPI.rejectWithValue(error.message);
-//   }
-// });
-
 export const logout = createAsyncThunk('auth/logout', async (_, thunkAPI) => {
-  const state = thunkAPI.getState();
-  const token = state.auth.token;
-
   try {
+    const state = thunkAPI.getState();
+    const token = state.auth.token;
+
     await axios.post(
       '/api/auth/logout',
       {},
-      { headers: { Authorization: `Bearer ${token}` } },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
     );
-  } catch (error) {
-    console.warn('Logout error:', error.message);
-  } finally {
-    // завжди очищаємо токен і стан
-    localStorage.removeItem('token');
     clearAuthHeader();
+    return;
+  } catch (error) {
+    return thunkAPI.rejectWithValue(error.message);
   }
 });
+
+// export const logout = createAsyncThunk('auth/logout', async (_, thunkAPI) => {
+//   const state = thunkAPI.getState();
+//   const token = state.auth.token;
+
+//   try {
+//     await axios.post(
+//       '/api/auth/logout',
+//       {},
+//       { headers: { Authorization: `Bearer ${token}` } },
+//     );
+//   } catch (error) {
+//     console.warn('Logout error:', error.message);
+//   } finally {
+//     // завжди очищаємо токен і стан
+//     localStorage.removeItem('token');
+//     clearAuthHeader();
+//   }
+// });
