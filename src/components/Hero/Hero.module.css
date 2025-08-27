@@ -1,13 +1,10 @@
 .hero {
-  padding: 128px 16px;
+  padding: 128px 16px 98px;
   background: linear-gradient(to left, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.9)),
     url('../../images/Hero-mobil.jpg');
   background-repeat: no-repeat;
   background-position: center;
   background-size: cover;
-}
-
-.hero .overlay {
 }
 
 .hero .content {
@@ -29,6 +26,7 @@
 
 @media screen and (min-width: 768px) {
   .hero {
+    padding: 128px 16px 128px;
     background: linear-gradient(to left, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.9)),
       url('../../images/Hero-tablet.jpg');
     background-repeat: no-repeat;
@@ -43,4 +41,13 @@
 }
 
 @media screen and (min-width: 1440px) {
+  .hero {
+      background: linear-gradient(to left, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.9)),
+        url('../../images/Hero-deck.jpg');
+      background-repeat: no-repeat;
+      background-position: center;
+      background-size: cover;
+    }
+  
 }
+

@@ -1,5 +1,5 @@
 import s from './SearchBox.module.css';
-import { Formik, Field, Form } from 'formik';
+import { Formik, Field, Form, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { useDispatch } from 'react-redux';
 import { searchRecipes } from '../../redux/recipes/operations';
@@ -9,8 +9,8 @@ import { setQuery, clearResults } from '../../redux/recipes/slice'; // 🟢 до
 const Schema = Yup.object({
   q: Yup.string()
     .trim()
-    .min(2, 'мінімум 2 символи')
-    .required('Еnter more than 2 letters'),
+    .min(2, 'Enter more than 2 letters')
+    .required('Enter more than 2 letters'),
 });
 
 export default function SearchBox() {
@@ -50,17 +50,15 @@ export default function SearchBox() {
     >
       {({ errors, touched, isSubmitting }) => (
         <Form className={s.searchbox}>
-          <div className="form-field">
+          <label className="form-field">
             <Field
               name="q"
               type="text"
               placeholder="Search recipes"
               className={`${s.input} ${errors.q && touched.q ? s.error : ''}`}
             />
-            {errors.q && touched.q && (
-              <span className={s.error}>{errors.q}</span>
-            )}
-          </div>
+            <ErrorMessage name="q" component="div" className={s.fix} />
+          </label>
           <button type="submit" className={s.btn} disabled={isSubmitting}>
             Search
           </button>
