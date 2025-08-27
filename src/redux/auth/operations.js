@@ -1,6 +1,5 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
-import { jwtDecode } from 'jwt-decode';
 
 axios.defaults.baseURL = 'http://localhost:3000/'; // треба було первирити функціонал
 
@@ -34,9 +33,9 @@ export const login = createAsyncThunk(
     try {
       const res = await axios.post('/api/auth/login', values);
       console.log('Login response:', res);
+
       const token = res.data.token; // 🔹 визначаємо token
       setAuthHeader(token);
-      setupAutoLogout(token, thunkAPI.dispatch);
       return res.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.message);
@@ -44,38 +43,42 @@ export const login = createAsyncThunk(
   },
 );
 
-export const logout = createAsyncThunk('auth/logout', async (_, thunkAPI) => {
-  try {
-    const state = thunkAPI.getState();
-    const token = state.auth.token;
+// export const logout = createAsyncThunk('auth/logout', async (_, thunkAPI) => {
+//   try {
+//     const state = thunkAPI.getState();
+//     const token = state.auth.token;
 
+//     await axios.post(
+//       '/api/auth/logout',
+//       {},
+//       {
+//         headers: {
+//           Authorization: `Bearer ${token}`,
+//         },
+//       },
+//     );
+//     clearAuthHeader();
+//     return;
+//   } catch (error) {
+//     return thunkAPI.rejectWithValue(error.message);
+//   }
+// });
+
+export const logout = createAsyncThunk('auth/logout', async (_, thunkAPI) => {
+  const state = thunkAPI.getState();
+  const token = state.auth.token;
+
+  try {
     await axios.post(
       '/api/auth/logout',
       {},
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      },
+      { headers: { Authorization: `Bearer ${token}` } },
     );
-    clearAuthHeader();
-    return;
   } catch (error) {
-    return thunkAPI.rejectWithValue(error.message);
+    console.warn('Logout error:', error.message);
+  } finally {
+    // завжди очищаємо токен і стан
+    localStorage.removeItem('token');
+    clearAuthHeader();
   }
 });
-
-const setupAutoLogout = (token, dispatch) => {
-  if (!token) return;
-
-  const decoded = jwtDecode(token); // { exp: 1724772771, iat: ... }
-  const expirationTime = decoded.exp * 1000 - Date.now();
-
-  if (expirationTime > 0) {
-    setTimeout(() => {
-      dispatch(logout());
-    }, expirationTime);
-  } else {
-    dispatch(logout());
-  }
-};
