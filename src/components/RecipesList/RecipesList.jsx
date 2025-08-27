@@ -23,7 +23,8 @@ import { searchRecipes } from '../../redux/recipes/operations';
 axios.defaults.baseURL =
   import.meta.env.VITE_API_URL || 'https://dcgroup-react-node-b.onrender.com/';
 
-export default function RecipesList() {
+export default function RecipesList({ onResetAll }) {
+  // 🟢 додав onResetAll
   const dispatch = useDispatch();
 
   // --- поиск из Redux ---
@@ -117,7 +118,7 @@ export default function RecipesList() {
         <NoResultSearch
           query={query.title || ''} // 🟢 показуємо, що шукав користувач
           totalResults={0}
-          onReset={() => dispatch(clearResults())} // 🟢 очищаємо Redux
+          onReset={onResetAll} // 🟢 очищаємо Redux
         />
       );
     }
