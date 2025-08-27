@@ -13,11 +13,7 @@ export default function Hero() {
       <Container>
         <div className={s.overlay} />
         <div className={s.content}>
-          <h1 className={s.title}>
-            Plan, Cook, and Share Your
-            <br />
-            Flavors
-          </h1>
+          <h1 className={s.title}>Plan, Cook, and Share Your Flavors</h1>
 
           {/* пока без логики — только UI */}
           <SearchBox />
