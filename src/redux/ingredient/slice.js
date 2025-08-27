@@ -17,7 +17,7 @@ const ingredientsSlice = createSlice({
       })
       .addCase(fetchIngredients.fulfilled, (state, action) => {
         state.loading = false;
-        state.items = action.payload;
+        state.items = action.payload.data;
       })
       .addCase(fetchIngredients.rejected, (state, action) => {
         state.loading = false;

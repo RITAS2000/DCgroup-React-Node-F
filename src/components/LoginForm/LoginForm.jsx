@@ -5,6 +5,8 @@ import * as Yup from "yup";
 import { login } from "../../redux/auth/operations";
 import css from "./LoginForm.module.css";
 import Container from "../Container/Container";
+import { useState } from "react";  
+import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 
 const validationSchema = Yup.object({
   email: Yup.string()
@@ -20,6 +22,8 @@ const validationSchema = Yup.object({
 export default function LoginForm() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  const [showPassword, setShowPassword] = useState(false); 
 
   const handleSubmit = async (values, { resetForm }) => {
     const result = await dispatch(login(values));
@@ -60,14 +64,23 @@ export default function LoginForm() {
 
               <label className={css.label}>
                 <span className={css.text}>Enter your password</span>
-                <Field
-                  name="password"
-                  type="password"
-                  placeholder="********"
-                  className={`${css.input} ${
-                    errors.password && touched.password ? css.inputError : ""
-                  }`}
-                />
+                <div className={css.passWrapper}>
+                  <Field
+                    name="password"
+                    type="password"
+                    placeholder="********"
+                    className={`${css.input} ${
+                      errors.password && touched.password ? css.inputError : ""
+                    }`}
+                  />
+                  <button
+                      type="button"
+                      onClick={() => setShowPassword((v) => !v)}
+                      className={css.toggleBtn}
+                    >
+                      {showPassword ? <AiOutlineEyeInvisible size={20} /> : <AiOutlineEye size={20} />}
+                    </button>
+                </div>
                 <ErrorMessage
                   name="password"
                   component="div"

@@ -31,17 +31,24 @@
 }
 
 .closeBtn {
-    position: absolute;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border: none;
-    background-color: inherit;
-    top: 16px;
-    right: 16px;
-    width: 24px;
-    height: 24px;
+  position: absolute;
+  top: 16px;
+  right: 32px;
+  cursor: pointer;
+  color: black;
+  line-height: 0;
+  background: none;
+  border: none;
+  transition: transform 0.25s ease, color 0.25s ease;
+}
+.closeBtn:hover {
+  transform: scale(1.2);
+}
 
+.icon {
+  display: block;
+  width: 24px;
+  height: 24px;
 }
 
 @media (min-width: 768px) {
