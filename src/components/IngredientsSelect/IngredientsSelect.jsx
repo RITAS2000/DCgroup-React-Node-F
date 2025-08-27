@@ -20,10 +20,12 @@ const IngredientsSelect = ({ selectedIngredient, onChange }) => {
 
   return (
     <div className={css.ingredientsSelectWrapper}>
-      {loading && <span>...</span>}
-      {error && <span>Error: {error}</span>}
+      {loading && <span className={css.hint}>Loading…</span>}
+      {error && <span className={css.hint}>Error: {String(error)}</span>}
       {!loading && !error && (
         <select
+          id="filter-ingredient"
+          aria-label="Ingredient"
           value={selectedIngredient || ''}
           onChange={(e) => onChange(e.target.value)}
           className={css.select}

@@ -24,7 +24,7 @@ export default function SearchBox() {
         actions.setSubmitting(false);
         return;
       }
-      dispatch(setQuery({ title: q, category: '', ingredient: '' }));
+      dispatch(setQuery({ title: q }));
 
       const res = await dispatch(searchRecipes({ title: q, page: 1 })).unwrap();
       if (!res.recipes || res.recipes.length === 0) {
