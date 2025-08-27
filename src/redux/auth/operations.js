@@ -1,5 +1,6 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
+import { jwtDecode } from 'jwt-decode';
 
 axios.defaults.baseURL = 'http://localhost:3000/'; // треба було первирити функціонал
 
@@ -12,7 +13,6 @@ const setAuthHeader = (token) => {
 const clearAuthHeader = () => {
   delete axios.defaults.headers.common.Authorization;
 };
-
 
 export const register = createAsyncThunk(
   'auth/register',
@@ -34,7 +34,9 @@ export const login = createAsyncThunk(
     try {
       const res = await axios.post('/api/auth/login', values);
       console.log('Login response:', res);
-      setAuthHeader(res.data.token);
+      const token = res.data.token; // 🔹 визначаємо token
+      setAuthHeader(token);
+      setupAutoLogout(token, thunkAPI.dispatch);
       return res.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.message);
@@ -56,10 +58,24 @@ export const logout = createAsyncThunk('auth/logout', async (_, thunkAPI) => {
         },
       },
     );
-    clearAuthHeader();  
+    clearAuthHeader();
     return;
-
   } catch (error) {
     return thunkAPI.rejectWithValue(error.message);
   }
 });
+
+const setupAutoLogout = (token, dispatch) => {
+  if (!token) return;
+
+  const decoded = jwtDecode(token); // { exp: 1724772771, iat: ... }
+  const expirationTime = decoded.exp * 1000 - Date.now();
+
+  if (expirationTime > 0) {
+    setTimeout(() => {
+      dispatch(logout());
+    }, expirationTime);
+  } else {
+    dispatch(logout());
+  }
+};
