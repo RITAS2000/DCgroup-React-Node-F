@@ -1,19 +1,34 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import { useDispatch } from 'react-redux';
-import { toast } from 'react-toastify';
+import axios from 'axios';
 import { logout } from '../../redux/auth/operations.js';
+import { toast } from 'react-toastify';
 
-export default function UnauthorizedHandler({ error }) {
+const UnauthorizedHandler = () => {
   const dispatch = useDispatch();
-  const [handled, setHandled] = useState(false);
+  const hasShownToast = useRef(false); // трекнемо чи показаний тост
 
   useEffect(() => {
-    if (error?.status === 401 && !handled) {
-      dispatch(logout());
-      toast.error('Unauthorized — you have been logged out');
-      setHandled(true);
-    }
-  }, [error, handled, dispatch]);
+    const interceptor = axios.interceptors.response.use(
+      (response) => response,
+      (error) => {
+        if (error.response && error.response.status === 401) {
+          if (!hasShownToast.current) {
+            hasShownToast.current = true;
+            toast.info('Сесія закінчилась. Будь ласка, увійдіть знову.');
+          }
+          dispatch(logout());
+        }
+        return Promise.reject(error);
+      },
+    );
 
-  return null; // компонент нічого не рендерить
-}
+    return () => {
+      axios.interceptors.response.eject(interceptor);
+    };
+  }, [dispatch]);
+
+  return null;
+};
+
+export default UnauthorizedHandler;
