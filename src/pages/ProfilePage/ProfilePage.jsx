@@ -1,22 +1,31 @@
-import { useParams } from 'react-router-dom';
+import { Navigate, useParams } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 import s from './ProfilePage.module.css';
 
-import ProfileNavigation from '../../components/UserProfile/ProfileNavigation/ProfileNavigation.jsx';
-import UserRecipesList from '../../components/UserProfile/UserRecipesList/UserRecipesList.jsx';
+import { selectUserProfileTotalItems } from '../../redux/userProfile/selectors';
+
+import ProfileNavigation from '../../components/ProfileNavigation/ProfileNavigation.jsx';
+import UserRecipesList from '../../components/UserRecipeList/UserRecipesList.jsx';
 
 export default function ProfilePage() {
-  const { recipeType = 'own' } = useParams();
-  const type = recipeType === 'favorites' ? 'favorites' : 'own';
+  const { recipeType } = useParams();
+  const totalItems = useSelector(selectUserProfileTotalItems);
+  const allowedTypes = ['own', 'favorites'];
+
+  if (!allowedTypes.includes(recipeType)) {
+    return <Navigate to="/profile/own" replace />;
+  }
 
   return (
     <section className={s.wrap}>
       <header className={s.header}>
         <h1 className={s.h1}>My profile</h1>
-        <ProfileNavigation active={type} />
+        <ProfileNavigation active={recipeType} />
+        <p className={s.count}>{totalItems} recipes</p>
       </header>
 
-      {type === 'own' && <UserRecipesList type="own" />}
-      {type === 'favorites' && <UserRecipesList type="favorites" />}
+      {recipeType === 'own' && <UserRecipesList type="own" />}
+      {recipeType === 'favorites' && <UserRecipesList type="favorites" />}
     </section>
   );
 }
