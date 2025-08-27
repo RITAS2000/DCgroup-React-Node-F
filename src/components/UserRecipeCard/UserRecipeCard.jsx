@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { getImageUrl, deleteFavorite, addFavorite } from '../../../api/recipes';
+import { getImageUrl, deleteFavorite, addFavorite } from '../../api/recipes';
 import s from './UserRecipeCard.module.css';
 
 export default function UserRecipeCard({
@@ -14,8 +14,8 @@ export default function UserRecipeCard({
   const [pending, setPending] = useState(false);
 
   const r = item?.recipe ?? item ?? {};
+  const recipeId = item?.recipeId || r._id;
 
-  const recipeId = r.id || r._id || r.recipeId || item?.recipeId;
   const heading = r.title || r.name || 'Recipe';
   const desc = r.description || r.desc || '';
   const time = r.time ?? r.cookTime ?? r.totalTime ?? '';
@@ -28,22 +28,21 @@ export default function UserRecipeCard({
   const [isSaved, setIsSaved] = useState(!!isFavoritesTab);
 
   async function toggleSave(id) {
-    const token = localStorage.getItem('accessToken') ?? '';
-    if (!token || !id || pending) return;
+    if (!id || pending) return;
+
     try {
       setPending(true);
+      console.log('Try to toggle favorite with recipeId:', id);
+
       if (isSaved) {
-        await deleteFavorite(id, token);
+        await deleteFavorite(id);
         setIsSaved(false);
-        if (isFavoritesTab) {
-          if (typeof onRemoved === 'function') onRemoved(id);
-          else
-            window.dispatchEvent(
-              new CustomEvent('recipe:removed', { detail: { id } }),
-            );
+
+        if (isFavoritesTab && typeof onRemoved === 'function') {
+          onRemoved(id);
         }
       } else {
-        await addFavorite(id, token);
+        await addFavorite(id);
         setIsSaved(true);
       }
     } catch (err) {
@@ -77,7 +76,7 @@ export default function UserRecipeCard({
         <h3 className={s.title} title={heading}>
           {heading}
         </h3>
-        {time ? (
+        {time && (
           <span className={s.timeBadge} title={`${time} min`}>
             <svg
               width="20"
@@ -98,16 +97,14 @@ export default function UserRecipeCard({
             </svg>
             {time}
           </span>
-        ) : null}
+        )}
       </div>
 
       <div className={s.descBlock}>
         <p className={s.desc}>{desc || '\u00A0'}</p>
-        {typeof cals === 'number' ? (
-          <span className={s.calsPill}>~{cals} cals</span>
-        ) : (
-          <span className={s.calsPill}>~N/A cals</span>
-        )}
+        <span className={s.calsPill}>
+          {typeof cals === 'number' ? `~${cals} cals` : '~N/A cals'}
+        </span>
       </div>
 
       <div className={s.footerRow}>

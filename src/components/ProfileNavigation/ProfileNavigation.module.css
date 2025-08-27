@@ -1,9 +1,10 @@
-.tabs {
+.nav {
   display: flex;
   gap: 38px;
+  margin-bottom: 16px;
 }
 
-.tabBtn {
+.nav a {
   font-family: 'Montserrat', sans-serif;
   border: 0;
   background: transparent;
@@ -16,7 +17,7 @@
   outline: none;
 }
 
-.tabBtn::after {
+.nav a::after {
   content: '';
   position: absolute;
   left: 0;
@@ -29,16 +30,8 @@
   transition: transform 0.2s ease;
 }
 
-.tabBtn:hover::after,
-.tabBtn:focus-visible::after,
-.tabBtn.active::after {
+.nav a:hover::after,
+.nav a:focus-visible::after,
+.nav a.active::after {
   transform: scaleX(1);
-}
-
-.countLine {
-  font-family: 'Montserrat', sans-serif;
-  margin-bottom: 16px;
-  font-size: 18px;
-  font-weight: 600;
-  color: #000;
 }
