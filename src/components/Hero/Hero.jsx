@@ -3,7 +3,7 @@ import s from './Hero.module.css';
 import SearchBox from '../SearchBox/SearchBox';
 import Container from '../Container/Container';
 
-export default function Hero() {
+export default function Hero({ resetRef }) {
   return (
     <section
       className={s.hero}
@@ -16,7 +16,7 @@ export default function Hero() {
           <h1 className={s.title}>Plan, Cook, and Share Your Flavors</h1>
 
           {/* пока без логики — только UI */}
-          <SearchBox />
+          <SearchBox resetRef={resetRef} />
         </div>
       </Container>
     </section>

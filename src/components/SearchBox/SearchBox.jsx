@@ -5,6 +5,7 @@ import { useDispatch } from 'react-redux';
 import { searchRecipes } from '../../redux/recipes/operations';
 import { toast } from 'react-toastify';
 import { setQuery, clearResults } from '../../redux/recipes/slice'; // 🟢 додав clearResults
+import { useRef } from 'react'; // 🟢 додав
 
 const Schema = Yup.object({
   q: Yup.string()
@@ -13,7 +14,8 @@ const Schema = Yup.object({
     .required('Enter more than 2 letters'),
 });
 
-export default function SearchBox() {
+export default function SearchBox({ resetRef }) {
+  // 🟢 додав resetRef
   const dispatch = useDispatch();
   const initValues = { q: '' };
 
@@ -28,7 +30,7 @@ export default function SearchBox() {
 
       const res = await dispatch(searchRecipes({ title: q, page: 1 })).unwrap();
       if (!res.recipes || res.recipes.length === 0) {
-        toast.info('Nothing found');
+        // toast.info('Nothing found'); //закоментув буде виводитись компонент NoResultSearch
       }
     } catch (e) {
       toast.error(String(e));
@@ -44,6 +46,7 @@ export default function SearchBox() {
 
   return (
     <Formik
+      innerRef={resetRef} // 🟢 додав
       initialValues={initValues}
       validationSchema={Schema}
       onSubmit={onSubmit}
