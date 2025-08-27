@@ -44,12 +44,14 @@ export async function addFavorite(recipeId, signal) {
 
 export async function deleteFavorite(recipeId, signal) {
   const token = localStorage.getItem('accessToken');
+
   const res = await api.delete(`/api/recipes/saved/${recipeId}`, {
     signal,
     headers: {
       Authorization: `Bearer ${token}`,
     },
   });
+
   return res.data;
 }
 

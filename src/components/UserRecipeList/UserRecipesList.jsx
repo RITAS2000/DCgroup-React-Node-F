@@ -52,6 +52,7 @@ export default function UserRecipesList({ type }) {
                 item={it}
                 mode={type}
                 onRemoved={(id) => dispatch(removeSaved(id))}
+                recipeId={it.recipe?._id || it._id}
               />
             </li>
           ))}

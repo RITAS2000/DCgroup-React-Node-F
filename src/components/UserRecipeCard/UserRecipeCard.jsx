@@ -14,8 +14,8 @@ export default function UserRecipeCard({
   const [pending, setPending] = useState(false);
 
   const r = item?.recipe ?? item ?? {};
+  const recipeId = item?.recipeId || r._id;
 
-  const recipeId = r.id || r._id || r.recipeId || item?.recipeId;
   const heading = r.title || r.name || 'Recipe';
   const desc = r.description || r.desc || '';
   const time = r.time ?? r.cookTime ?? r.totalTime ?? '';
@@ -32,6 +32,7 @@ export default function UserRecipeCard({
 
     try {
       setPending(true);
+      console.log('Try to toggle favorite with recipeId:', id);
 
       if (isSaved) {
         await deleteFavorite(id);
