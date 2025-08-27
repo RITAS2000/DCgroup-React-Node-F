@@ -1,5 +1,5 @@
 import { configureStore } from '@reduxjs/toolkit';
-import userProfileReducer from './userProfile/slice.js';
+import userProfileReducer from './userPro/slice.js';
 import authReducer from './auth/slice.js';
 import modalReducer from './modal/slice.js';
 import addRecipeReducer from './addRecipe/sliceAddRecipe.js';

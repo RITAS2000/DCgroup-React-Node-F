@@ -1,19 +1,15 @@
 import { useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import {
-  fetchOwn,
-  fetchSaved,
-  removeSaved,
-} from '../../redux/userProfile/thunks';
+import { fetchOwn, fetchSaved, removeSaved } from '../../redux/userPro/thunks';
 import {
   selectUserRecipes,
   selectUserProfileLoading,
   selectUserProfileError,
   selectUserProfilePage,
   selectUserProfileHasNext,
-} from '../../redux/userProfile/selectors';
+} from '../../redux/userPro/selectors';
 
-import { setRecipeType } from '../../redux/userProfile/slice';
+import { setRecipeType } from '../../redux/userProf/slice';
 import UserRecipeCard from '../UserRecipeCard/UserRecipeCard';
 import LoadMoreBtn from '../LoadMoreBtn/LoadMoreBtn';
 import s from './UserRecipesList.module.css';

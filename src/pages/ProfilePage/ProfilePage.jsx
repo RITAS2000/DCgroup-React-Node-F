@@ -2,7 +2,7 @@ import { Navigate, useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import s from './ProfilePage.module.css';
 
-import { selectUserProfileTotalItems } from '../../redux/userProfile/selectors';
+import { selectUserProfileTotalItems } from '../../redux/userPro/selectors';
 
 import ProfileNavigation from '../../components/ProfileNavigation/ProfileNavigation.jsx';
 import UserRecipesList from '../../components/UserRecipeList/UserRecipesList.jsx';
