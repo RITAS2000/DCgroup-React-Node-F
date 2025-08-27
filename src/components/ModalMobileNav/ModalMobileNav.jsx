@@ -9,12 +9,10 @@ import Logo from '../Logo/Logo.jsx';
 import RecipesLink from '../RecipesLink/RecipesLink.jsx';
 import MyProfileLink from '../MyProfileLink/MyProfileLink.jsx';
 import AddRecipeLink from '../AddRecipeLink/AddRecipeLink.jsx';
-// import { selectBurgerOpen } from '../../redux/modal/selectors.js';
 
 export default function ModalMobileNav({ isOpen = false }) {
   const dispatch = useDispatch();
   const isLoggedIn = useSelector(selectIsLoggedIn);
-  // const isOpen = useSelector(selectBurgerOpen);
 
   const handleClose = () => dispatch(closeBurger());
 
@@ -30,7 +28,7 @@ export default function ModalMobileNav({ isOpen = false }) {
         <Logo />
         <button className={css.close} onClick={handleClose}>
           <svg width="32" height="32">
-            <use href="/sprite/symbol-defs.svg#icon-close" />
+            <use href="/sprite/symbol-defs.svg#icon-close-circle" />
           </svg>
         </button>
 
